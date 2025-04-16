@@ -1,0 +1,132 @@
+/* ========================== */
+/*      VARIABLES GLOBALES    */
+/* ========================== */
+:root {
+    /* Colores "primarios" */
+    --color-primario: #415381;
+    --color-secundario: #8eade1;
+    --color-primario-claro: #d5e0f3;
+    --color-acento: #668dd1;
+    --color-exito: #198754;
+    --color-error: #dc3545;
+    --color-advertencia: #ffc107;
+    --color-info: #0dcaf0;
+
+    /* Colores de fondo */
+    --fondo-claro: #f7fafc;
+    --fondo-secundario-claro: #e6e3e3;
+    --fondo-oscuro: #343a40;
+    --blanco: #ffffff;
+    --negro: #172b4d;
+
+    /* Texto */
+    --texto-principal: #0a0e15;
+    --texto-secundario: #6c757d;
+
+    /* Fuente */
+    --fuente-principal: 'Poppins', sans-serif;
+    --tamaño-base: 16px;
+
+    /* Espaciado */
+    --espaciado-sm: 0.5rem;
+    --espaciado-md: 1rem;
+    --espaciado-lg: 2rem;
+
+    /* Bordes */
+    --radio-borde: 0.5rem;
+}
+
+/* ========================== */
+/*      ESTILOS GENERALES     */
+/* ========================== */
+body {
+    font-family: var(--fuente-principal);
+    font-size: var(--tamaño-base);
+    background-color: var(--fondo-claro);
+    color: var(--texto-principal);
+    margin: 0;
+    padding: 0;
+}
+
+/* Enlaces */
+a {
+    color: var(--color-primario);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Títulos */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: bold;
+    color: var(--texto-principal);
+}
+
+/* Botones personalizados */
+.btn-primario {
+    background-color: var(--color-primario);
+    color: var(--blanco);
+    border: none;
+}
+
+.btn-primario:hover {
+    background-color: #0b5ed7;
+}
+
+/* Tarjetas o contenedores */
+.card-custom {
+    background-color: var(--blanco);
+    border-radius: var(--radio-borde);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: var(--espaciado-md);
+    margin-bottom: var(--espaciado-md);
+}
+
+/* Formularios */
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    border: 1px solid var(--color-secundario);
+    border-radius: var(--radio-borde);
+    padding: var(--espaciado-sm);
+    width: 100%;
+    font-size: 1rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-primario);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* ========================== */
+/* UTILIDADES PERSONALIZADAS */
+/* ========================== */
+
+/* Mensajes de estado */
+.alert-custom {
+    padding: var(--espaciado-sm);
+    border-radius: var(--radio-borde);
+    margin-bottom: var(--espaciado-sm);
+    font-weight: 500;
+}
+
+.alert-exito {
+    background-color: var(--color-exito);
+    color: var(--blanco);
+}
+
+.alert-error {
+    background-color: var(--color-peligro);
+    color: var(--blanco);
+}

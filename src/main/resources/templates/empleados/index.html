@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <div class="container mt-4">
+
+        <!-- Buscador y botón de agregar -->
+        <article class="row">
+            <div class="col-7">
+                <h2>Lista de empleados</h2>
+                <form th:action="@{/empleados/buscar}" method="post">
+                    <div class="input-group mt-2">
+                        <input type="text" name="nombre" placeholder="Buscar por nombre o cédula" class="form-control">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-5 text-end">
+                <a th:href="@{/empleados/agregar}" class="btn btn-primary mt-2 w-25">Agregar</a>
+            </div>
+        </article>
+
+        <!-- Alerta para los mensajes -->
+        <div class="row mt-4" th:if="${mensaje != null and mensaje != ''}">
+            <div class="col-12">
+                <div class="alert alert-warning alert-dismissible fade show mb-0" role="alert">
+                    <p class="mb-0" th:text="${mensaje}"></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de empleados -->
+        <div class="row">
+            <div th:if="${empleados != null and !empleados.empty}" class="col">
+
+                <table class="table table-striped mx-auto mt-2" id="tablaEmpleados">
+                    <thead>
+                        <tr>
+                            <th scope="col">Código</th>
+                            <th scope="col">Cédula</th>
+                            <th scope="col">Nombre Completo</th>
+                            <th scope="col">Correo Electrónico</th>
+                            <th scope="col">Teléfono</th>
+                            <th scope="col">Puntos Profesionales</th>
+                            <th scope="col">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        <tr th:each="empleado : ${empleados}">
+                            <td th:text="${empleado.idEmpleado}"></td>
+                            <td th:text="${empleado.cedula}"></td>
+                            <td th:text="${empleado.nombre + ' ' + empleado.apellido1 + ' ' + empleado.apellido2}"></td>
+                            <td th:text="${empleado.correoElectronico}"></td>
+                            <td th:text="${empleado.telefono}"></td>
+                            <td th:text="${empleado.puntosProfesionales}"></td>
+                            <td class="text-center">
+                                <a th:href="@{/empleados/editar/{id}(id=${empleado.idEmpleado})}"><i
+                                        class="fa-solid fa-pencil"></i></a>
+                                <form th:action="@{/empleados/eliminar}" method="post">
+                                    <input type="hidden" name="idEmpleado" th:value="${empleado.idEmpleado}" />
+                                    <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div th:if="${empleados == null or empleados.empty}" class="col">
+                <div class="alert alert-warning mt-3 text-center" role="alert">
+                    No hay registros de empleados por mostrar.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#tablaEmpleados').DataTable({
+                "pageLength": 15,
+                "searching": false,
+                "lengthChange": false,
+                "language": {
+                    "url": "/datatable-es.json"
+                },
+                "columnDefs": [
+                    {
+                        "targets": [0, 1, 2, 3, 4, 5],
+                        "className": "dt-center"
+                    }
+                ]
+            });
+        });
+    </script>
+</body>
+
+</html>

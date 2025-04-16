@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${#fields.hasErrors()} ? 'Editar Empleado' : 'Agregar Empleado'">Empleado</title>
+</head>
+
+<body>
+    <h1 th:text="${#fields.hasErrors()} ? 'Editar Empleado' : 'Agregar Empleado'"></h1>
+
+    <div class="container mt-4">
+
+        <form th:action="@{/empleados/guardar}" th:object="${empleado}" method="post">
+
+            <input type="hidden" th:field="*{idEmpleado}" />
+
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" th:field="*{nombre}" name="nombre" class="form-control" />
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-danger"></span><br />
+
+            <label for="" class="form-label">Cédula:</label>
+            <input type="text" th:field="*{cedula}" />
+            <span th:if="${#fields.hasErrors('cedula')}" th:errors="*{cedula}"></span><br />
+
+            <label for="" class="form-label">Correo electrónico:</label>
+            <input type="email" th:field="*{correoElectronico}" />
+            <span th:if="${#fields.hasErrors('correoElectronico')}" th:errors="*{correoElectronico}"></span><br />
+
+            <label for="" class="form-label">Teléfono:</label>
+            <input type="text" th:field="*{telefono}" />
+            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span><br />
+
+            <!-- Agrega más campos si los tienes en tu modelo -->
+
+            <button type="submit">Guardar</button>
+            <a th:href="@{/empleados/}">Cancelar</a>
+        </form>
+    </div>
+
+</body>
+
+</html>
