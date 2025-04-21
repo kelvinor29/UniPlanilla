@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.thymeleaf.org">
 
-<head>
+<head th:replace="layout/plantillas :: head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -9,7 +9,9 @@
 
 <body>
 
-    <div class="container mt-4">
+    <aside th:replace="layout/plantillas.html :: sidebar"></aside>
+
+    <main class="container mt-4">
 
         <!-- Buscador y botón de agregar -->
         <article class="row">
@@ -82,8 +84,9 @@
             </div>
 
         </div>
-    </div>
+    </main>
 
+    <footer th:replace="layout/plantillas.html :: scripts"></footer>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#tablaEmpleados').DataTable({

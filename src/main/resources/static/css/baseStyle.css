@@ -46,6 +46,8 @@ body {
     color: var(--texto-principal);
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: row;
 }
 
 /* Enlaces */
@@ -129,4 +131,10 @@ textarea:focus {
 .alert-error {
     background-color: var(--color-peligro);
     color: var(--blanco);
+}
+
+@media (max-width: 992px) {
+    body{
+        flex-direction: column;
+    }
 }
