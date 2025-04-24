@@ -3,6 +3,8 @@ package com.kelvin.uni_planilla.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.kelvin.uni_planilla.models.enums.EstadoBasico;
 
 import jakarta.persistence.Column;
@@ -39,10 +41,12 @@ public class Permiso implements Serializable {
 
     @Column(name = "FECHA_INICIO_PE", nullable = false)
     @FutureOrPresent(message = "La fecha de inicio debe ser de hoy en adelante.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaInicioPer;
 
     @Column(name = "FECHA_FINAL_PE", nullable = false)
     @FutureOrPresent(message = "La fecha de fin debe ser de hoy en adelante.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaFinalPer;
 
     @Column(name = "CON_GOCE", nullable = false)

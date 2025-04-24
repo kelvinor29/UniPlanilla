@@ -38,8 +38,6 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 
     @Override
     public Empleado guardarEmpleado(Empleado empleado) {
-        // Validar datos únicos
-        validarDatosUnicos(empleado);
         return empleadoRep.save(empleado);
     }
 
@@ -70,12 +68,14 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 
         return obtenerEmpleado(id)
                 .map(emp -> {
+                    Integer esNomActivo = empleadoRep.tieneNombramientoActivo(id);
                     // Validar si tiene un nombramiento activo
-                    if (empleadoRep.tieneNombramientoActivo(id))
+                    if (Integer.valueOf(1).equals(esNomActivo))
                         return false; // No se puede eliminar porque tiene un nombramiento activo
 
+                    Integer tieneRelaciones = empleadoRep.tieneEmpleadoRelaciones(id);
                     // Validar si tiene relaciones con otras entidades
-                    if (empleadoRep.tieneEmpleadoRelaciones(id)) {
+                    if (Integer.valueOf(1).equals(tieneRelaciones)) {
                         // Borrado lógico
                         emp.setBorradoE(true);
                         emp.setEstadoE(EstadoBasico.INA);
@@ -84,32 +84,28 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
                         // Borrado físico
                         empleadoRep.delete(emp);
                     return true;
-                }).orElse(true);
+                }).orElse(true); // Empleado no existe
     }
 
     @Override
-    public boolean esCedulaRepetida(String cedula) {
-        return empleadoRep.existsByCedula(cedula);
+    public boolean esCedulaRepetida(String cedula, int idEmpleado) {
+        // Validar si se encuentra un empleado diferente con dicha cédula
+        return empleadoRep.findByCedula(cedula)
+                .filter(empleado -> empleado.getIdEmpleado() != idEmpleado).isPresent();
     }
 
     @Override
-    public boolean esCorreoRepetido(String correo) {
-        return empleadoRep.existsByCorreoElectronico(correo);
+    public boolean esCorreoRepetido(String correo, int idEmpleado) {
+        // Validar si se encuentra un empleado diferente con dicho correo electrónico
+        return empleadoRep.findByCorreoElectronico(correo)
+                .filter(empleado -> empleado.getIdEmpleado() != idEmpleado).isPresent();
     }
 
     @Override
-    public boolean esTelefonoRepetido(String telefono) {
-        return empleadoRep.existsByTelefono(telefono);
+    public boolean esTelefonoRepetido(String telefono, int idEmpleado) {
+        // Validar si se encuentra un empleado diferente con dicha teléfono
+        return empleadoRep.findByTelefono(telefono)
+                .filter(empleado -> empleado.getIdEmpleado() != idEmpleado).isPresent();
     }
 
-    // ==============================================================================================================
-
-    private void validarDatosUnicos(Empleado empleado) {
-        if (empleadoRep.existsByCedula(empleado.getCedula()))
-            throw new IllegalArgumentException("Ya existe un empleado con esta cédula.");
-        if (empleadoRep.existsByTelefono(empleado.getTelefono()))
-            throw new IllegalArgumentException("Ya existe un empleado con este teléfono.");
-        if (empleadoRep.existsByCorreoElectronico(empleado.getCorreoElectronico()))
-            throw new IllegalArgumentException("Ya existe un empleado con este correo electrónico.");
-    }
 }

@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.kelvin.uni_planilla.models.enums.EstadoBasico;
 
 import jakarta.persistence.Column;
@@ -29,19 +31,23 @@ public class Deduccion implements Serializable {
     private int idDeduccion;
 
     @Column(name = "FECHA_ACTUALIZACION_D", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacionDec;
 
-    @Column(name = "ASUNTO_D",nullable = false)
+    @Column(name = "ASUNTO_D", nullable = false)
     private String asuntoDec;
 
-    @Column(name = "VALOR_FIJO_D", precision = 10, scale = 2)
+    @Column(name = "VALOR_D", precision = 10, scale = 2)
     private BigDecimal valorFijoDec;
 
-    @Column(name = "PORCENTAJE_D", precision = 3, scale = 2)
+    @Column(name = "ES_PORCENTAJE_D", precision = 3, scale = 2)
     private BigDecimal porcentajeDec;
 
     @Column(name = "CATEGORIA_APLICA_D")
-    private short categoriaAplicaDec;
+    private short categoriaAplicaDec = 0;
+
+    @Column(name = "NECESITA_ANIOS_D")
+    private boolean necesitaAniosDec = false;
 
     @Column(name = "ESTADO_D", nullable = false)
     private EstadoBasico estadoDec = EstadoBasico.ACT;

@@ -13,7 +13,7 @@ public interface IEmpleadoService {
     public Empleado guardarEmpleado(Empleado empleado);
     public boolean eliminarEmpleado(int id);
 
-    public boolean esCedulaRepetida(String cedula);
-    public boolean esCorreoRepetido(String correo);
-    public boolean esTelefonoRepetido(String telefono);
+    public boolean esCedulaRepetida(String cedula, int idEmpleado);
+    public boolean esCorreoRepetido(String correo, int idEmpleado);
+    public boolean esTelefonoRepetido(String telefono, int idEmpleado);
 }

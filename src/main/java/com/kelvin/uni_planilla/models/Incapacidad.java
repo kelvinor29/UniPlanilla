@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.kelvin.uni_planilla.models.enums.EstadoBasico;
 
 import jakarta.persistence.Column;
@@ -42,10 +44,12 @@ public class Incapacidad implements Serializable {
 
     @Column(name = "FECHA_INICIO_IN", nullable = false)
     @FutureOrPresent(message = "La fecha de inicio debe ser de hoy en adelante.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaInicioInc;
 
     @Column(name = "FECHA_FIN_IN", nullable = false)
     @FutureOrPresent(message = "La fecha de fin debe ser de hoy en adelante.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaFinInc;
 
     @Column(name = "MOTIVO_IN", nullable = false, length = 50)

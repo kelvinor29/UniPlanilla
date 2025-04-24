@@ -137,7 +137,7 @@
 }
 
 .sidebar.collapsed .sidebar-nav .nav-link .nav-label,
-.sidebar.collapsed .sidebar-header .text-logo{
+.sidebar.collapsed .sidebar-header .text-logo {
     display: none;
 }
 
@@ -185,11 +185,11 @@
         height: 56px;
         width: calc(100% - 26px);
         max-height: calc(100vh - 26px);
-        margin: 13px;
         overflow-y: hidden;
         scrollbar-width: none;
         box-shadow: 0 0px 5px rgba(0, 0, 0, 0.05);
         position: sticky;
+        margin: 13px;
     }
 
     .sidebar .sidebar-header {

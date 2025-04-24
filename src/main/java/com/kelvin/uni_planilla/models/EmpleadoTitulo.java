@@ -3,6 +3,8 @@ package com.kelvin.uni_planilla.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -44,6 +46,7 @@ public class EmpleadoTitulo implements Serializable {
     @Column(name = "FECHA_OBTUVO")
     @NotNull(message = "La fecha del título obtenido es requerido.")
     @PastOrPresent(message = "La fecha de obtención debe ser hoy o antes.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaObtuvo;
 
 }

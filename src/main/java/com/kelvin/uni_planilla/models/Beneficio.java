@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.kelvin.uni_planilla.models.enums.EstadoBasico;
 
 import jakarta.persistence.Column;
@@ -29,24 +31,27 @@ public class Beneficio implements Serializable {
     private int idBeneficio;
 
     @Column(name = "FECHA_ACTUALIZACION_B", nullable = false)
-    private LocalDate fechaActualizacionDec;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate fechaActualizacionBen;
 
-    @Column(name = "ASUNTO_B",nullable = false)
-    private String asuntoDec;
+    @Column(name = "ASUNTO_B", nullable = false)
+    private String asuntoBen;
 
-    @Column(name = "VALOR_FIJO_B", precision = 10, scale = 2)
-    private BigDecimal valorFijoDec;
+    @Column(name = "VALOR_B", precision = 10, scale = 2)
+    private BigDecimal valorBen;
 
-    @Column(name = "PORCENTAJE_B", precision = 3, scale = 2)
-    private BigDecimal porcentajeDec;
+    @Column(name = "ES_PORCENTAJE_B", precision = 3, scale = 2)
+    private BigDecimal porcentajeBen;
 
     @Column(name = "CATEGORIA_APLICA_B")
-    private short categoriaAplicaDec;
+    private short categoriaAplicaBen = 0;
+
+    @Column(name = "NECESITA_ANIOS_B")
+    private boolean necesitaAniosBen = false;
 
     @Column(name = "ESTADO_B", nullable = false)
-    private EstadoBasico estadoDec = EstadoBasico.ACT;
+    private EstadoBasico estadoBen = EstadoBasico.ACT;
 
     @OneToMany(mappedBy = "beneficio")
     private Set<DetalleBeneficio> detallesBeneficios = new HashSet<>();
 }
-

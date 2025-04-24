@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head th:replace="layout/plantillas :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div th:fragment="empleadoCarta(empleado)">
+        <div class="card shadow rounded-3 p-3 mb-3">
+            <h5 class="card-title" th:text="${empleado.nombre} + ' ' + ${empleado.apellido}"></h5>
+            <p class="card-text"><strong>Cédula:</strong> <span th:text="${empleado.cedula}"></span></p>
+            <p class="card-text"><strong>Fecha Nacimiento:</strong> <span
+                    th:text="${#dates.format(empleado.fechaNacimiento, 'dd/MM/yyyy')}"></span></p>
+            <p class="card-text"><strong>Correo:</strong> <span th:text="${empleado.correo}"></span></p>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head th:replace="layout/plantillas :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <aside th:replace="layout/plantillas.html :: sidebar"></aside>
+
+    <main class="w-100 d-flex justify-content-start align-items-center flex-column">
+
+        <div class="row g-4">
+
+            <div class="col-12 col-xxl-5">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Cálculo de Planilla</h5>
+
+                        <form action="#" method="post">
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+                                    <label for="mes" class="form-label mb-0">Mes:</label>
+                                    <select class="form-select" id="mes" name="mes" required>
+                                        <option th:each="mes : ${mesesCalculo}" th:value="${mes}"
+                                            th:text="${nombreMeses[mes.intValue()]}"
+                                            th:selected="${mes == T(java.time.LocalDate).now().getMonthValue()}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="anio" class="form-label mb-0">Año:</label>
+                                    <select class="form-select" id="anio" name="anio" required>
+                                        <option th:each="anio : ${anios}" th:value="${anio}" th:text="${anio}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label for="fechaActual" class="form-label mb-0">Fecha Actual:</label>
+                                    <input type="hidden" name="fechaActual" th:value="${fechaActual}">
+                                    <div class="form-control" readonly
+                                        th:text="${#temporals.format(fechaActual, 'EEEE, d ''de'' MMMM ''de'' yyyy')}">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <label for="tipoPlanilla" class="form-label mb-0">Tipo Planilla:</label>
+                                    <select class="form-select" id="tipoPlanilla" name="tipoPlanilla" required>
+                                        <!-- Aqui se genera las option gracias al js -->
+                                    </select>
+                                </div>
+
+                                <div class="col d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary w-md-25">Calcular Planilla</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-xxl-7">
+                <div class="card h-100 ">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">Resultado del Cálculo</h5>
+
+                        <hr>
+                        <div class="row g-2 d-flex justify-content-between align-items-center">
+
+                            <div class="col-12 col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-title mb-0">Total Salario Bruto</p>
+                                        <p class="card-text fw-semibold lead">$00,000.00</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-title mb-0">Total Deducciones</p>
+                                        <p class="card-text fw-semibold lead">$00,000.00</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-title mb-0">Total Salario Neto</p>
+                                        <p class="card-text fw-semibold lead">$00,000.00</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <hr>
+
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+        </div>
+
+        <!-- Buscador -->
+        <article class="container">
+            <div class="row">
+
+                <div class="col-12 col-lg-4">
+
+                    <form th:action="@{/empleados/buscar}" method="post">
+                        <div class="input-group mt-2">
+                            <input type="text" name="filtro" placeholder="Buscar por nombre o cédula"
+                                class="form-control">
+                            <button type="submit" class="btn btn-primary">Buscar</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-md-4 col-xl-3" th:each="empleado : ${empleados}">
+                    <div th:replace="layout/card-empleado :: empleadoCarta(${empleado})"></div>
+                </div>
+            </div>
+
+        </article>
+    </main>
+
+    <footer th:replace="layout/plantillas.html :: scripts"></footer>
+    <script th:src="@{/javascript/calcularPlanilla.js}"></script>
+</body>
+
+</html>

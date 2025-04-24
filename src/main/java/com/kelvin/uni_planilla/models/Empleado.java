@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.kelvin.uni_planilla.models.enums.EstadoBasico;
 
 import jakarta.persistence.Column;
@@ -18,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -51,6 +54,7 @@ public class Empleado implements Serializable {
     @Column(name = "CEDULA_E", nullable = false, length = 9, unique = true)
     @Size(max = 9, message = "La cédula no puede tener más de 9 caracteres.")
     @NotBlank(message = "La cédula es requerida.")
+    @Pattern(regexp = "^[0-9]{9}$", message = "El cédula solo permite 9 dígitos.")
     private String cedula;
 
     @Column(name = "CORREO_ELECTRONICO_E", nullable = false, length = 50, unique = true)
@@ -66,6 +70,8 @@ public class Empleado implements Serializable {
     private String telefono;
 
     @Column(name = "FECHA_NACIMIENTO_E", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message = "La fecha de nacimiento debe ser menor a hoy.")
     private LocalDate fechaNacimiento;
 
     @Column(name = "PUNTOS_PROFESIONALES_E", nullable = false)
@@ -78,7 +84,7 @@ public class Empleado implements Serializable {
     @Column(name = "BORRADO_E", nullable = false)
     private boolean borradoE = false;
 
-    @OneToMany(mappedBy = "empleado") // @JsonIgnore??
+    @OneToMany(mappedBy = "empleado") // TODO: @JsonIgnore??
     private Set<Nombramiento> nombramientos = new HashSet<>();
 
     @OneToMany(mappedBy = "empleado")

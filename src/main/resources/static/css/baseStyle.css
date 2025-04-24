@@ -50,6 +50,10 @@ body {
     flex-direction: row;
 }
 
+main {
+    padding: 4em 3em;
+}
+
 /* Enlaces */
 a {
     color: var(--color-primario);
@@ -60,7 +64,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Títulos */
 h1,
 h2,
 h3,
@@ -69,26 +72,6 @@ h5,
 h6 {
     font-weight: bold;
     color: var(--texto-principal);
-}
-
-/* Botones personalizados */
-.btn-primario {
-    background-color: var(--color-primario);
-    color: var(--blanco);
-    border: none;
-}
-
-.btn-primario:hover {
-    background-color: #0b5ed7;
-}
-
-/* Tarjetas o contenedores */
-.card-custom {
-    background-color: var(--blanco);
-    border-radius: var(--radio-borde);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: var(--espaciado-md);
-    margin-bottom: var(--espaciado-md);
 }
 
 /* Formularios */
@@ -133,8 +116,12 @@ textarea:focus {
     color: var(--blanco);
 }
 
+.contenedor{
+    max-width: 1600px;
+}
+
 @media (max-width: 992px) {
-    body{
+    body {
         flex-direction: column;
     }
 }

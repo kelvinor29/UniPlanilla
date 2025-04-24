@@ -1,19 +1,19 @@
 package com.kelvin.uni_planilla.models.enums;
 
-public enum TipoPlanilla {
-    ORDINARIO("Ordinario"),
-    EXTRAORDINARIO("Extraordinario"),
+public enum TipoPlanillaEnum {
+    ORDINARIO("Planilla Ordinaria"),
+    EXTRAORDINARIO("Planilla Extraordinaria"),
     AGUINALDO("Aguinaldo"),
     SALARIO_ESCOLAR("Salario Escolar");
 
     private final String tipoPlanilla;
 
-    TipoPlanilla(String tipoPlanilla){
+    TipoPlanillaEnum(String tipoPlanilla){
         this.tipoPlanilla = tipoPlanilla;
     }
 
-    @Override
-    public String toString() {
+    public String getTipoPlanilla() {
         return tipoPlanilla;
-    }
+    }    
+
 }

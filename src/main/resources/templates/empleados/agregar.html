@@ -1,42 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.thymeleaf.org">
 
-<head>
-    <title th:text="${#fields.hasErrors()} ? 'Editar Empleado' : 'Agregar Empleado'">Empleado</title>
+<head th:replace="layout/plantillas :: head">
 </head>
 
 <body>
-    <h1 th:text="${#fields.hasErrors()} ? 'Editar Empleado' : 'Agregar Empleado'"></h1>
+    <aside th:replace="layout/plantillas.html :: sidebar"></aside>
 
-    <div class="container mt-4">
+    <div class="container mt-5">
 
-        <form th:action="@{/empleados/guardar}" th:object="${empleado}" method="post">
+        <div class="row d-flex justify-content-center">
+            <div class="col-12 col-md-10 col-8">
 
-            <input type="hidden" th:field="*{idEmpleado}" />
+                <form th:action="@{/empleados/guardar}" th:object="${empleado}" method="post">
+                    <h2 th:text="${modoEdicion} ? 'Editar Empleado' : 'Agregar Empleado'"></h2>
 
-            <label for="nombre" class="form-label">Nombre:</label>
-            <input type="text" th:field="*{nombre}" name="nombre" class="form-control" />
-            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="text-danger"></span><br />
+                    <input type="hidden" th:field="*{idEmpleado}" />
 
-            <label for="" class="form-label">Cédula:</label>
-            <input type="text" th:field="*{cedula}" />
-            <span th:if="${#fields.hasErrors('cedula')}" th:errors="*{cedula}"></span><br />
+                    <div class="row g-3">
+                        <div class="col-md-6 col-lg-3">
+                            <label for="cedula" class="form-label">Cédula:</label>
+                            <input type="text" pattern="\d{9}" maxlength="9" th:field="*{cedula}" class="form-control"
+                                required />
+                            <span th:if="${#fields.hasErrors('cedula')}" th:errors="*{cedula}"
+                                class="text-danger form-text"></span>
+                        </div>
 
-            <label for="" class="form-label">Correo electrónico:</label>
-            <input type="email" th:field="*{correoElectronico}" />
-            <span th:if="${#fields.hasErrors('correoElectronico')}" th:errors="*{correoElectronico}"></span><br />
+                        <div class="col-md-6 col-lg-3">
+                            <label for="nombre" class="form-label">Nombre:</label>
+                            <input type="text" th:field="*{nombre}"  class="form-control"
+                                placeholder="Nombre del empelado" required />
+                            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"
+                                class="text-danger form-text"></span>
+                        </div>
 
-            <label for="" class="form-label">Teléfono:</label>
-            <input type="text" th:field="*{telefono}" />
-            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span><br />
+                        <div class="col-md-6 col-lg-3">
+                            <label for="apellido1" class="form-label">Primer Apellido:</label>
+                            <input type="text" th:field="*{apellido1}"  class="form-control"
+                                placeholder="Primero Apellido del empleado" required />
+                            <span th:if="${#fields.hasErrors('apellido1')}" th:errors="*{apellido1}"
+                                class="text-danger form-text"></span>
+                        </div>
 
-            <!-- Agrega más campos si los tienes en tu modelo -->
+                        <div class="col-md-6 col-lg-3">
+                            <label for="apellido2" class="form-label">Segundo Apellido:</label>
+                            <input type="text" th:field="*{apellido2}" maxlength="25" class="form-control"
+                                placeholder="Segundo Apellido del empleado" />
+                            <span th:if="${#fields.hasErrors('apellido2')}" th:errors="*{apellido2}"
+                                class="text-danger form-text"></span>
+                        </div>
 
-            <button type="submit">Guardar</button>
-            <a th:href="@{/empleados/}">Cancelar</a>
-        </form>
+                        <div class="col-md-6">
+                            <label for="correoElectronico" class="form-label">Correo electrónico:</label>
+                            <input type="email" th:field="*{correoElectronico}" class="form-control"
+                                placeholder="Ej: usuario12@gmail.com" required />
+                            <span th:if="${#fields.hasErrors('correoElectronico')}" th:errors="*{correoElectronico}"
+                                class="text-danger form-text"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="telefono" class="form-label">Teléfono:</label>
+                            <input type="text" pattern="\d{8}" maxlength="8" th:field="*{telefono}" class="form-control"
+                                required />
+                            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"
+                                class="text-danger form-text"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="fechaNacimiento" class="form-label">Fecha de nacimiento:</label>
+                            <input type="date" class="form-control" id="fechaNacimiento" 
+                                th:field="*{fechaNacimiento}" required
+                                th:max="${#dates.format(#dates.createNow().minusDays(1), 'yyyy-MM-dd')}">
+                            <span th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}"
+                                class="text-danger form-text"></span>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a th:href="@{/empleados/}" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" name="guardar" value="Guardar" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
 
+    <footer th:replace="layout/plantillas.html :: scripts"></footer>
 </body>
 
 </html>

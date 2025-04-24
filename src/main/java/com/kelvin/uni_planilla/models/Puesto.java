@@ -6,6 +6,8 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -55,6 +57,7 @@ public class Puesto implements Serializable {
 
     @Column(name = "FECHA_ACTUALIZACION", nullable = false)
     @NotNull(message = "La fecha de creación/actualización es requerida.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacion = LocalDate.now();
 
     @Column(name = "BORRADO_P", nullable = false)

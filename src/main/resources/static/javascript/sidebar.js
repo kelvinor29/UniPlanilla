@@ -14,11 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Quitar o agregar clase al clickear en el burger del sidebar
   menuToggler.addEventListener("click", () => {
-    cambiarMenuMovil(sidebar.classList.toggle("menu-active"));
-  });
-
-  // Toggle para móviles
-  menuToggler.addEventListener("click", () => {
     const esSidebarAbierto = sidebar.classList.toggle("menu-active");
     sidebar.style.height = esSidebarAbierto ? `${sidebar.scrollHeight}px` : alturaSidebarColapsado;
 

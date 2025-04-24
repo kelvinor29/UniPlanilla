@@ -3,6 +3,8 @@ package com.kelvin.uni_planilla.models;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.kelvin.uni_planilla.models.enums.EstadoBasico;
 import com.kelvin.uni_planilla.models.enums.TipoSalario;
 
@@ -47,10 +49,13 @@ public class Nombramiento implements Serializable {
     private TipoSalario tipoSalario;
 
     @Column(name = "FECHA_INICIO_N", nullable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaInicioNom = LocalDate.now();
 
-    // TODO: Realizar validacion personalizada para validar que fecha fin sea mayor a fecha de incio
+    // TODO: Realizar validacion personalizada para validar que fecha fin sea mayor
+    // a fecha de incio
     @Column(name = "FECHA_FIN_N")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaFinNom;
 
     @Column(name = "ESTADO_N", nullable = false, length = 3)
