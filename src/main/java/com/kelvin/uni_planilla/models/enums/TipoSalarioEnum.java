@@ -1,5 +1,5 @@
 package com.kelvin.uni_planilla.models.enums;
 
-public enum TipoSalario {
+public enum TipoSalarioEnum {
     Compuesto, Global
 }

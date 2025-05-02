@@ -9,7 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.kelvin.uni_planilla.models.enums.TipoPlanillaEnum;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,13 +18,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "PLANILLAS")
-public class Planilla implements Serializable {
+public class    Planilla implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -34,10 +33,10 @@ public class Planilla implements Serializable {
     private int idPlanilla;
 
     @Column(name = "ANIO_PL", nullable = false)
-    private byte anioPl;
+    private short anioPl;
 
     @Column(name = "MES_CALCULADO", nullable = false)
-    private short mesCalculado;
+    private byte mesCalculado;
 
     @Column(name = "FECHA_CALCULO", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -45,7 +44,7 @@ public class Planilla implements Serializable {
 
     @Column(name = "TIPO_PLANILLA", nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotBlank(message="El tipo de planilla es requerido")
+    @NotNull(message = "El tipo de planilla es requerido")
     private TipoPlanillaEnum tipoPlanilla = TipoPlanillaEnum.ORDINARIO;
 
     @Column(name = "FECHA_PRIMER_PAGO", nullable = false)

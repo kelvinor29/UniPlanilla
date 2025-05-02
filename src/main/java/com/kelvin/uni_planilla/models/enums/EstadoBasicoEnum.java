@@ -1,12 +1,12 @@
 package com.kelvin.uni_planilla.models.enums;
 
-public enum EstadoBasico {
+public enum EstadoBasicoEnum {
     ACT("Activo"), 
     INA("Inactivo");
 
     private final String DISPLAY_NAME;
 
-    EstadoBasico(String displayName) {
+    EstadoBasicoEnum(String displayName) {
         this.DISPLAY_NAME = displayName;
     }
 

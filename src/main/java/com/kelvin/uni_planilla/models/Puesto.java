@@ -33,7 +33,7 @@ public class Puesto implements Serializable {
     @Column(name = "ID_PUESTO")
     private int idPuesto;
 
-    @Column(nullable = false, length = 50, unique = true)
+    @Column(name="PUESTO",nullable = false, length = 50, unique = true)
     @Size(max = 50, message = "El puesto no puede tener más de 50 caracteres.")
     @NotBlank(message = "El puesto es requerido.")
     private String nombrePuesto;
@@ -55,7 +55,7 @@ public class Puesto implements Serializable {
     @Positive(message = "El salario global debe ser un número positivo.")
     private BigDecimal salarioGlobal;
 
-    @Column(name = "FECHA_ACTUALIZACION", nullable = false)
+    @Column(name = "FECHA_ACTUALIZACION_P", nullable = false)
     @NotNull(message = "La fecha de creación/actualización es requerida.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacion = LocalDate.now();

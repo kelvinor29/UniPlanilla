@@ -1,13 +1,13 @@
 package com.kelvin.uni_planilla.models;
 
+import jakarta.persistence.Transient;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +17,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -42,8 +41,12 @@ public class Incapacidad implements Serializable {
     @NotNull(message = "Debe seleccionar un empleado.")
     private Empleado empleado;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ID_NORMATIVA", nullable = false)
+    @NotNull(message = "Debe seleccionar una normativa.")
+    private Normativa normativa;
+
     @Column(name = "FECHA_INICIO_IN", nullable = false)
-    @FutureOrPresent(message = "La fecha de inicio debe ser de hoy en adelante.")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaInicioInc;
 
@@ -59,8 +62,6 @@ public class Incapacidad implements Serializable {
 
     @Column(name = "ESTADO_IN", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private EstadoBasico estadoInc = EstadoBasico.ACT;
+    private EstadoBasicoEnum estadoInc = EstadoBasicoEnum.ACT;
 
-    @ManyToMany(mappedBy = "incapacidades")
-    private Set<Normativa> normativas = new HashSet<>();
 }

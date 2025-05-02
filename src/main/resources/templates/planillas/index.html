@@ -19,12 +19,12 @@
                     <div class="card-body">
                         <h5 class="card-title mb-3">Cálculo de Planilla</h5>
 
-                        <form action="#" method="post">
+                        <form th:action="@{/planillas/calcular}" th:object="${planilla}" method="post">
                             <div class="row g-3">
 
                                 <div class="col-md-6">
                                     <label for="mes" class="form-label mb-0">Mes:</label>
-                                    <select class="form-select" id="mes" name="mes" required>
+                                    <select class="form-select" id="mes" name="mesCalculado" required>
                                         <option th:each="mes : ${mesesCalculo}" th:value="${mes}"
                                             th:text="${nombreMeses[mes.intValue()]}"
                                             th:selected="${mes == T(java.time.LocalDate).now().getMonthValue()}">
@@ -34,14 +34,14 @@
 
                                 <div class="col-md-6">
                                     <label for="anio" class="form-label mb-0">Año:</label>
-                                    <select class="form-select" id="anio" name="anio" required>
+                                    <select class="form-select" id="anio" name="anioPl" required>
                                         <option th:each="anio : ${anios}" th:value="${anio}" th:text="${anio}"></option>
                                     </select>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="fechaActual" class="form-label mb-0">Fecha Actual:</label>
-                                    <input type="hidden" name="fechaActual" th:value="${fechaActual}">
+                                    <input type="hidden" name="fechaCalculo" th:value="${fechaActual}">
                                     <div class="form-control" readonly
                                         th:text="${#temporals.format(fechaActual, 'EEEE, d ''de'' MMMM ''de'' yyyy')}">
                                     </div>

@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,7 +49,7 @@ public class ImpuestoRenta implements Serializable{
 
     @Column(name = "ESTADO_IMP", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private EstadoBasico estadoImp = EstadoBasico.ACT;
+    private EstadoBasicoEnum estadoImp = EstadoBasicoEnum.ACT;
 
     @ManyToMany(mappedBy = "impuestosRenta")
     private Set<DetallePlanilla> detallesPlanillas = new HashSet<>();

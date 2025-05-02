@@ -53,7 +53,7 @@ public class DetallePlanilla implements Serializable {
     private BigDecimal salarioNeto;
 
     @Column(name = "MONTO_RETROACTIVO", nullable = false)
-    private BigDecimal montoRetroactivo;
+    private BigDecimal montoRetroactivo = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "detallePlanilla")
     private Set<DetalleDeduccion> detallesDeducciones = new HashSet<>();
@@ -62,10 +62,8 @@ public class DetallePlanilla implements Serializable {
     private Set<DetalleBeneficio> detallesBeneficios = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(
-        name = "DETALLES_RENTAS",
-        joinColumns = @JoinColumn(name = "ID_DETALLE_PLANILLA"),
-        inverseJoinColumns = @JoinColumn(name ="ID_IMP_RENTA")
-    )
+    @JoinTable(name = "DETALLES_RENTAS", joinColumns = @JoinColumn(name = "ID_DETALLE_PLANILLA"), inverseJoinColumns = @JoinColumn(name = "ID_IMP_RENTA"))
     private Set<ImpuestoRenta> impuestosRenta = new HashSet<>();
+
+
 }

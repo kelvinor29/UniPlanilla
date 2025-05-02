@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.kelvin.uni_planilla.models.enums.TipoGradoAcademico;
+import com.kelvin.uni_planilla.models.enums.TipoGradoAcademicoEnum;
+import com.kelvin.uni_planilla.models.enums.converters.TipoGradoAcademicoConverter;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,6 +16,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,10 +35,10 @@ public class GradoAcademico implements Serializable{
     @Column(name = "ID_GRADO_ACADEMICO")
     private int idGradoAcademico;
 
+    @Convert(converter= TipoGradoAcademicoConverter.class)
     @Column(name = "GRADO_ACADEMICO", nullable = false, length = 20)
     @NotBlank(message = "El grado académico es requerido.")
-    @Enumerated(EnumType.STRING)
-    private TipoGradoAcademico gradoAcademico = TipoGradoAcademico.NO_APLICA;
+    private TipoGradoAcademicoEnum gradoAcademico = TipoGradoAcademicoEnum.NO_APLICA;
 
     @Column(name = "PUNTOS_PROFESIONALES_GA", nullable = false)
     @NotNull(message = "Los puntos profesionales es requerido.")

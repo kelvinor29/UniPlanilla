@@ -3,7 +3,7 @@ package com.kelvin.uni_planilla.models;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,7 +42,7 @@ public class Pension implements Serializable {
     @Positive(message = "El monto de la pensión debe ser un número positivo.")
     private BigDecimal montoPen;
 
-    @Column(name = "ESTADO_PE", nullable = false, length = 3)
+    @Column(name = "ESTADO_P", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private EstadoBasico estadoPen = EstadoBasico.ACT;
+    private EstadoBasicoEnum estadoPen = EstadoBasicoEnum.ACT;
 }

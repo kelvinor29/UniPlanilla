@@ -1,16 +1,16 @@
 package com.kelvin.uni_planilla.models.enums;
 
-public enum TipoGradoAcademico {
+public enum TipoGradoAcademicoEnum {
     NO_APLICA("No Aplica"),
     TECNICO("Técnico"),
+    DIPLOMADO("Diplomado"),
     BACHILLERATO("Bachillerato"),
     LICENCIATURA("Licenciatura"),
-    MAESTRIA("Maestría"),
-    DIPLOMADO("Diplomado");
+    MAESTRIA("Maestría");
 
     private final String tipoGrado;
 
-    TipoGradoAcademico(String tipoGrado){
+    TipoGradoAcademicoEnum(String tipoGrado) {
         this.tipoGrado = tipoGrado;
     }
 

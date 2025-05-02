@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -77,9 +77,9 @@ public class Empleado implements Serializable {
     @Column(name = "PUNTOS_PROFESIONALES_E", nullable = false)
     private byte puntosProfesionales = 0;
 
-    @Column(name = "ESTADO_E", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private EstadoBasico estadoE = EstadoBasico.ACT;
+    @Column(name = "ESTADO_E", nullable = false, length = 3)
+    private EstadoBasicoEnum estadoE = EstadoBasicoEnum.ACT;
 
     @Column(name = "BORRADO_E", nullable = false)
     private boolean borradoE = false;

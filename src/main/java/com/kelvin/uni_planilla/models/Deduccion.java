@@ -8,10 +8,12 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,16 +43,20 @@ public class Deduccion implements Serializable {
     private BigDecimal valorFijoDec;
 
     @Column(name = "ES_PORCENTAJE_D", precision = 3, scale = 2)
-    private BigDecimal porcentajeDec;
+    private boolean esPorcentajeDec;
 
     @Column(name = "CATEGORIA_APLICA_D")
     private short categoriaAplicaDec = 0;
+
+    @Column(name = "NECESITA_PUNTOS_PROFESIONALES_D")
+    private boolean necesitaPuntosProfDec = false;
 
     @Column(name = "NECESITA_ANIOS_D")
     private boolean necesitaAniosDec = false;
 
     @Column(name = "ESTADO_D", nullable = false)
-    private EstadoBasico estadoDec = EstadoBasico.ACT;
+    @Enumerated(EnumType.STRING)
+    private EstadoBasicoEnum estadoDec = EstadoBasicoEnum.ACT;
 
     @OneToMany(mappedBy = "deduccion")
     private Set<DetalleDeduccion> detallesDeducciones = new HashSet<>();

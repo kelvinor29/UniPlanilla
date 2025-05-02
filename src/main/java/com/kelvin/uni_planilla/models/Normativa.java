@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -47,18 +48,13 @@ public class Normativa implements Serializable {
 
     @Column(name = "RANGO_DIAS_FIN")
     @PositiveOrZero(message = "El rango máximo de días debe ser 0 o un número positivo.")
-    private byte rangoDiasFin;
+    private Byte rangoDiasFin;
 
-    @Column(name = "ESTADO_N", nullable = false, length = 3)
+    @Column(name = "ESTADO_NI", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private EstadoBasico estadoNorm = EstadoBasico.ACT;
+    private EstadoBasicoEnum estadoNorm = EstadoBasicoEnum.ACT;
 
-    @ManyToMany
-    @JoinTable(
-        name = "NORMATIVAS_INCAPACIDADES",
-        joinColumns = @JoinColumn(name = "ID_NORMATIVA"),
-        inverseJoinColumns = @JoinColumn(name = "ID_INCAPACIDAD")
-    )
+    @OneToMany(mappedBy = "normativa")
     private Set<Incapacidad> incapacidades = new HashSet<>();
 
 }

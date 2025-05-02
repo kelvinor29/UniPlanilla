@@ -1,5 +1,8 @@
 package com.kelvin.uni_planilla.services.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kelvin.uni_planilla.models.Empleado;
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.Nombramiento;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 import com.kelvin.uni_planilla.repositories.EmpleadoRepository;
 import com.kelvin.uni_planilla.services.IEmpleadoService;
 
@@ -32,6 +36,18 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 
     @Override
     @Transactional(readOnly = true)
+    // Listar los empleados disponibles para la planilla
+    public List<Empleado> listarEmpleadosParaPlanilla(int mes, int anio) {
+        LocalDate inicioMes = LocalDate.of(anio, mes, 1);
+        LocalDate finMes = inicioMes.withDayOfMonth(inicioMes.lengthOfMonth());
+
+        // Listar los empleados que están trabajando
+        return empleadoRep.listarEmpleadosNombramientoVigente(inicioMes, finMes);
+
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Empleado> obtenerEmpleado(int id) {
         return empleadoRep.findById(id);
     }
@@ -43,29 +59,6 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 
     @Override
     public boolean eliminarEmpleado(int id) {
-        // Optional<Empleado> empleado = obtenerEmpleado(id);
-
-        // if (empleado.isEmpty())
-        // return true; // Empleado ya no existe
-
-        // Empleado emp = empleado.get();
-
-        // // Validar si tiene un nombramiento activo
-        // if (empleadoRep.tieneNombramientoActivo(id))
-        // return false; // No se puede eliminar porque tiene un nombramiento activo
-
-        // // Validar si tiene relaciones con otras entidades
-        // if (empleadoRep.tieneEmpleadoRelaciones(id)) {
-        // // Borrado lógico
-        // emp.setBorradoE(true);
-        // emp.setEstadoE(EstadoBasico.INA);
-        // empleadoRep.save(emp);
-        // } else
-        // // Borrado físico
-        // empleadoRep.delete(emp);
-
-        // return true;
-
         return obtenerEmpleado(id)
                 .map(emp -> {
                     Integer esNomActivo = empleadoRep.tieneNombramientoActivo(id);
@@ -78,7 +71,7 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
                     if (Integer.valueOf(1).equals(tieneRelaciones)) {
                         // Borrado lógico
                         emp.setBorradoE(true);
-                        emp.setEstadoE(EstadoBasico.INA);
+                        emp.setEstadoE(EstadoBasicoEnum.INA);
                         empleadoRep.save(emp);
                     } else
                         // Borrado físico
@@ -108,4 +101,28 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
                 .filter(empleado -> empleado.getIdEmpleado() != idEmpleado).isPresent();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Nombramiento obtenerNombramientoPorMes(int mes, int anio, int idEmpleado) {
+        LocalDate inicioMes = LocalDate.of(anio, mes, 1);
+        LocalDate finMes = inicioMes.withDayOfMonth(inicioMes.lengthOfMonth());
+
+        return empleadoRep.obtenerNombramientoPorFecha(idEmpleado, inicioMes, finMes)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No se encontró nombramiento para el empleado en ese mes " + inicioMes.getMonth().name()));
+    }
+
+    @Override
+    public BigDecimal calcularSalarioDiario(BigDecimal salarioBaseMes) {
+        return salarioBaseMes.divide(BigDecimal.valueOf(20), RoundingMode.HALF_UP);
+    }
+
+    @Override
+    public BigDecimal calcularMontoADescontar(BigDecimal salarioBase, int totalDiasAusentes) {
+		BigDecimal salarioDiario = calcularSalarioDiario(salarioBase);
+
+        if (totalDiasAusentes > 20) totalDiasAusentes = 20;
+
+		return salarioDiario.multiply(BigDecimal.valueOf(totalDiasAusentes));
+	}
 }

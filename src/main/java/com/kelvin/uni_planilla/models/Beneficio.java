@@ -8,10 +8,12 @@ import java.util.Set;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,17 +42,21 @@ public class Beneficio implements Serializable {
     @Column(name = "VALOR_B", precision = 10, scale = 2)
     private BigDecimal valorBen;
 
-    @Column(name = "ES_PORCENTAJE_B", precision = 3, scale = 2)
-    private BigDecimal porcentajeBen;
+    @Column(name = "ES_PORCENTAJE_B")
+    private boolean esPorcentajeBen;
 
     @Column(name = "CATEGORIA_APLICA_B")
     private short categoriaAplicaBen = 0;
+
+    @Column(name = "NECESITA_PUNTOS_PROFESIONALES_B")
+    private boolean necesitaPuntosProfBen = false;
 
     @Column(name = "NECESITA_ANIOS_B")
     private boolean necesitaAniosBen = false;
 
     @Column(name = "ESTADO_B", nullable = false)
-    private EstadoBasico estadoBen = EstadoBasico.ACT;
+    @Enumerated(EnumType.STRING)
+    private EstadoBasicoEnum estadoBen = EstadoBasicoEnum.ACT;
 
     @OneToMany(mappedBy = "beneficio")
     private Set<DetalleBeneficio> detallesBeneficios = new HashSet<>();

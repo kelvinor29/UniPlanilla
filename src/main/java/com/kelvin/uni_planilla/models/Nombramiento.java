@@ -5,8 +5,8 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
-import com.kelvin.uni_planilla.models.enums.TipoSalario;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
+import com.kelvin.uni_planilla.models.enums.TipoSalarioEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,7 +46,7 @@ public class Nombramiento implements Serializable {
     @Column(name = "TIPO_SALARIO", nullable = false, length = 10)
     @NotEmpty(message = "Debe seleccionar el tipo de salario.")
     @Enumerated(EnumType.STRING)
-    private TipoSalario tipoSalario;
+    private TipoSalarioEnum tipoSalario;
 
     @Column(name = "FECHA_INICIO_N", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -60,6 +60,6 @@ public class Nombramiento implements Serializable {
 
     @Column(name = "ESTADO_N", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private EstadoBasico estadoNom = EstadoBasico.ACT;
+    private EstadoBasicoEnum estadoNom = EstadoBasicoEnum.ACT;
 
 }

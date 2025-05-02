@@ -1,8 +1,8 @@
 package com.kelvin.uni_planilla.dto;
 
 public class TipoPlanillaDTO {
-    private String value;
-    private String label;
+    private final String value;
+    private final String label;
 
     public TipoPlanillaDTO(String value, String label) {
         this.value = value;

@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.kelvin.uni_planilla.models.enums.EstadoBasico;
+import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,5 +59,6 @@ public class Permiso implements Serializable {
 
     @Column(name = "ESTADO_PE", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
-    private EstadoBasico estadoPer = EstadoBasico.ACT;
+    private EstadoBasicoEnum estadoPer = EstadoBasicoEnum.ACT;
+
 }
