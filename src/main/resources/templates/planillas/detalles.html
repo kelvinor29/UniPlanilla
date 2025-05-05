@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+
+<head th:replace="layout/plantillas.html :: head">
+</head>
+
+<body>
+    <aside th:replace="layout/plantillas.html :: sidebar"></aside>
+
+    <main>
+
+        <div class="modal show d-block mt-5">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"
+                            th:text="'Detalle del Cálculo de empleado – ' + ${T(java.time.Month).of(planilla.mesCalculado).getDisplayName(T(java.time.format.TextStyle).FULL, T(java.util.Locale).forLanguageTag('es-ES'))} + ' del ' + ${planilla.anioPl}">
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="employee-header ">
+                            <div class="employee-details">
+                                <div class="employee-avatar"
+                                    th:text="${#strings.substring(empDetp.nombreCompleto, 0, 2)}">
+                                </div>
+                                <div>
+                                    <h5 class="employee-name" th:text="${empDetp.nombreCompleto}"></h5>
+                                    <p class="employee-info"
+                                        th:text="${empDetp.puestoE + ' – Categoría ' + empDetp.categoria}"></p>
+                                    <p class="employee-info" th:text="'Cédula: ' + ${empDetp.cedula}"></p>
+                                </div>
+                            </div>
+
+                            <div >
+                                <div class="d-flex flex-column align-items-end">
+                                    <div class="mb-1">
+                                        <span class="fw-bold">Años Trabajados:</span>
+                                        <span th:text="${empDetp.aniosServicio}">2</span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <span class="fw-bold">Total Días Permiso:</span>
+                                        <span th:text="${empDetp.diasPermisoConGoce+empDetp.diasPermisoSinGoce}"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div >
+                                <div class="d-flex flex-column align-items-end">
+                                    <div class="mb-1">
+                                        <span class="fw-bold">Fecha de Cálculo:</span>
+                                        <span
+                                            th:text="${#temporals.format(empDetp.fechaCalculo,'dd/MM/yyyy')}">02/04/2025</span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <span class="fw-bold">Tipo de Planilla:</span>
+                                        <span th:text="${empDetp.tipoPlanilla}">Ordinaria</span>
+                                    </div>
+                                    <div>
+                                        <span class="fw-bold">Tipo de Salario:</span>
+                                        <span th:text="${empDetp.tipoSalario}">Compuesto</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Incapacidades del Mes -->
+                            <div class="col-md-6">
+                                <h6 class="section-title">Incapacidades del Mes
+                                    <span class="days-count"
+                                        th:text="'Total Días: ' + ${empDetp.totalDiasIncapacidad}"></span>
+                                </h6>
+                                <div th:each="incapacidad : ${empDetp.incapacidades}">
+                                    <div class="absence-item">
+                                        <i class="fas fa-user-injured absence-icon"></i>
+                                        <div class="absence-info">
+                                            <div class="absence-type" th:text="${incapacidad.motivoInc}"></div>
+                                            <div class="absence-dates"
+                                                th:text="${#temporals.format(incapacidad.fechaInicioInc, 'dd/MM/yyyy') + ' – ' + #temporals.format(incapacidad.fechaFinInc, 'dd/MM/yyyy')}">
+                                            </div>
+                                        </div>
+                                        <div class="absence-days" th:text="${incapacidad.diasIncapacidad} + ' días'">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Permisos del Mes -->
+                            <div class="col-md-6">
+                                <h6 class="section-title">Permisos del Mes
+                                    <span class="days-count"
+                                        th:text="'Total Días: ' + ${empDetp.totalDiasPermisos}"></span>
+                                </h6>
+                                <div th:each="permiso : ${empDetp.permisos}">
+                                    <div class="absence-item">
+                                        <i class="fas fa-calendar-check absence-icon"></i>
+                                        <div class="absence-info">
+                                            <div class="absence-type">
+                                                <span th:text="${permiso.motivoPer}"></span>
+                                                <span class="badge bg-light text-dark" th:if="${permiso.conGoce}"
+                                                    th:text="'(Aplica Goce)'"></span>
+                                                <span class="badge bg-light text-dark" th:unless="${permiso.conGoce}"
+                                                    th:text="'(Sin Goce)'"></span>
+                                            </div>
+                                            <div class="absence-dates"
+                                                th:text="${#temporals.format(permiso.fechaInicioPer, 'dd/MM/yyyy') + ' – ' + #temporals.format(permiso.fechaFinalPer, 'dd/MM/yyyy')}">
+                                            </div>
+                                        </div>
+                                        <div class="absence-days" th:text="${permiso.diasPermiso} + ' días'"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h6 class="section-title">Beneficios</h6>
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr>
+                                            <th>Salario Base: </th>
+                                            <td class="text-money"
+                                                th:text="'₡' + ${#numbers.formatDecimal(empDetp.salarioBase, 0, 'POINT', 2, 'COMMA')}">
+                                            </td>
+                                        </tr>
+                                        <tr th:each="beneficio : ${empDetp.montosBeneficios}">
+                                            <th th:text="${beneficio.asuntoBen}"></th>
+                                            <td class="text-money"
+                                                th:text="'₡' + ${#numbers.formatDecimal(beneficio.montoBen, 0, 'POINT', 2, 'COMMA')}">
+                                            </td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <th>Salario Total Bruto:</th>
+                                            <td class="text-money"
+                                                th:text="'₡' + ${#numbers.formatDecimal(empDetp.salarioBruto, 0, 'POINT', 2, 'COMMA')}">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h6 class="section-title">Deducciones</h6>
+                                <table class="table table-sm">
+                                    <tbody>
+                                        <tr th:each="deduccion : ${empDetp.montosDeducciones}">
+                                            <th th:text="${deduccion.asuntoDec}"></th>
+                                            <td class="text-money"
+                                                th:text="'₡' + ${#numbers.formatDecimal(deduccion.montoDec, 0, 'POINT', 2, 'COMMA')}">
+                                            </td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <th>Salario Total Neto:</th>
+                                            <td class="text-money"
+                                                th:text="'₡' + ${#numbers.formatDecimal(empDetp.salarioNeto, 0, 'POINT', 2, 'COMMA')}">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+    </main>
+
+</body>
+
+</html>

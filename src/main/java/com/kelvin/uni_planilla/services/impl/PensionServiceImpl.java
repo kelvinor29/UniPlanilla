@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kelvin.uni_planilla.dto.DeduccionEmpleadoDTO;
+import com.kelvin.uni_planilla.models.Pension;
 import com.kelvin.uni_planilla.repositories.PensionRepository;
 import com.kelvin.uni_planilla.services.IPensionService;
 
@@ -16,7 +16,7 @@ public class PensionServiceImpl implements IPensionService{
     private PensionRepository pensionRep;
 
     @Override
-    public List<DeduccionEmpleadoDTO> listarPensionesActivasEmpleado(int idEmpleado) {
+    public List<Pension> listarPensionesActivasEmpleado(int idEmpleado) {
         return pensionRep.listarPensionesActivasPorEmpleado(idEmpleado);
     }
 

@@ -1,8 +1,8 @@
 package com.kelvin.uni_planilla.models;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kelvin.uni_planilla.models.enums.TipoGradoAcademicoEnum;
 import com.kelvin.uni_planilla.models.enums.converters.TipoGradoAcademicoConverter;
@@ -10,14 +10,10 @@ import com.kelvin.uni_planilla.models.enums.converters.TipoGradoAcademicoConvert
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -49,5 +45,5 @@ public class GradoAcademico implements Serializable{
     private boolean borradoGa = false;
 
     @OneToMany(mappedBy = "gradoAcademico")
-    private Set<EmpleadoTitulo> empleadosTitulos = new HashSet<>();
+    private List<EmpleadoTitulo> empleadosTitulos = new ArrayList<>();
 }

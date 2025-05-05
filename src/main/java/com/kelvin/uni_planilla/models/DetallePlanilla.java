@@ -2,9 +2,10 @@ package com.kelvin.uni_planilla.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -55,15 +56,14 @@ public class DetallePlanilla implements Serializable {
     @Column(name = "MONTO_RETROACTIVO", nullable = false)
     private BigDecimal montoRetroactivo = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy = "detallePlanilla")
-    private Set<DetalleDeduccion> detallesDeducciones = new HashSet<>();
+    @OneToMany(mappedBy = "detallePlanilla", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleDeduccion> detallesDeducciones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "detallePlanilla")
-    private Set<DetalleBeneficio> detallesBeneficios = new HashSet<>();
+    @OneToMany(mappedBy = "detallePlanilla", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleBeneficio> detallesBeneficios = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(name = "DETALLES_RENTAS", joinColumns = @JoinColumn(name = "ID_DETALLE_PLANILLA"), inverseJoinColumns = @JoinColumn(name = "ID_IMP_RENTA"))
-    private Set<ImpuestoRenta> impuestosRenta = new HashSet<>();
-
+    private List<ImpuestoRenta> impuestosRenta = new ArrayList<>();
 
 }

@@ -2,11 +2,12 @@ package com.kelvin.uni_planilla.models;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,6 +52,6 @@ public class ImpuestoRenta implements Serializable{
     @Enumerated(EnumType.STRING)
     private EstadoBasicoEnum estadoImp = EstadoBasicoEnum.ACT;
 
-    @ManyToMany(mappedBy = "impuestosRenta")
-    private Set<DetallePlanilla> detallesPlanillas = new HashSet<>();
+    @ManyToMany(mappedBy = "impuestosRenta", cascade = CascadeType.ALL)
+    private List<DetallePlanilla> detallesPlanillas = new ArrayList<>();
 }

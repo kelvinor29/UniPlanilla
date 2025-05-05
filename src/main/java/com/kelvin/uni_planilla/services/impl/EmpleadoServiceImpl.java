@@ -66,9 +66,9 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
                     if (Integer.valueOf(1).equals(esNomActivo))
                         return false; // No se puede eliminar porque tiene un nombramiento activo
 
-                    Integer tieneRelaciones = empleadoRep.tieneEmpleadoRelaciones(id);
+                    Boolean tieneRelaciones = empleadoRep.tieneEmpleadoRelaciones(id);
                     // Validar si tiene relaciones con otras entidades
-                    if (Integer.valueOf(1).equals(tieneRelaciones)) {
+                    if (tieneRelaciones) {
                         // Borrado lógico
                         emp.setBorradoE(true);
                         emp.setEstadoE(EstadoBasicoEnum.INA);
@@ -119,10 +119,11 @@ public class EmpleadoServiceImpl implements IEmpleadoService {
 
     @Override
     public BigDecimal calcularMontoADescontar(BigDecimal salarioBase, int totalDiasAusentes) {
-		BigDecimal salarioDiario = calcularSalarioDiario(salarioBase);
+        BigDecimal salarioDiario = calcularSalarioDiario(salarioBase);
 
-        if (totalDiasAusentes > 20) totalDiasAusentes = 20;
+        if (totalDiasAusentes > 20)
+            totalDiasAusentes = 20;
 
-		return salarioDiario.multiply(BigDecimal.valueOf(totalDiasAusentes));
-	}
+        return salarioDiario.multiply(BigDecimal.valueOf(totalDiasAusentes));
+    }
 }

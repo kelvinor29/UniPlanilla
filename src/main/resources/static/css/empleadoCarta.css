@@ -1,0 +1,51 @@
+.card--empleado {
+    max-width: 50em;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    margin: 23px auto;
+}
+
+.card__avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--fondo-claro);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--texto-principal);
+    box-shadow: 0 0 0 1px rgba(82, 82, 82, 0.25);
+}
+
+
+.card__email {
+    font-size: 0.8rem;
+    color: var(--texto-secundario);
+    margin-bottom: 0;
+}
+
+.card__info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.info-label {
+    color: var(--texto-secundario);
+}
+
+.btn--detalles {
+    width: 100%;
+    border-radius: 6px;
+    margin-top: 10px;
+    outline: 1px solid var(--texto-secundario);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn--detalles:hover{
+    color: white;
+    background-color: var(--color-primario);
+}

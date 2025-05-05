@@ -2,13 +2,14 @@ package com.kelvin.uni_planilla.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.kelvin.uni_planilla.models.enums.TipoPlanillaEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,7 +25,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "PLANILLAS")
-public class    Planilla implements Serializable {
+public class Planilla implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -63,6 +64,6 @@ public class    Planilla implements Serializable {
     @Column(name = "PORCENTAJE_SEGUNDO_PAGO", nullable = false)
     private double porcentajeSegundoPago;
 
-    @OneToMany(mappedBy = "planilla")
-    private Set<DetallePlanilla> detallesPlanilla = new HashSet<>();
+    @OneToMany(mappedBy = "planilla", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetallePlanilla> detallesPlanilla = new ArrayList<>();
 }

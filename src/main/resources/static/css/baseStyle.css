@@ -99,7 +99,7 @@ textarea:focus {
 /* ========================== */
 
 /* Mensajes de estado */
-.alert-custom {
+/* .alert-custom {
     padding: var(--espaciado-sm);
     border-radius: var(--radio-borde);
     margin-bottom: var(--espaciado-sm);
@@ -114,10 +114,142 @@ textarea:focus {
 .alert-error {
     background-color: var(--color-peligro);
     color: var(--blanco);
-}
+} */
 
 .contenedor{
     max-width: 1600px;
+}
+
+.btn-primary{
+    background-color: var(--color-primario);
+    border: none;
+}
+
+.btn-primary:hover{
+    background-color: var(--fondo-oscuro);
+}
+
+/* Pagina de detalles del empleado por calculo */
+.modal-dialog {
+    max-width: 1000px;
+}
+.modal-header {
+    border-bottom: 1px solid #dee2e6;
+    padding: 1rem;
+}
+.modal-title {
+    font-weight: 500;
+}
+.employee-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+.employee-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 25px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #212529;
+    border: 1px solid #dee2e6;
+}
+.employee-details {
+    flex-direction: row;
+    display: flex;
+    
+}
+.employee-name {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+.employee-info {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+.section-title {
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+.days-count {
+    background-color: #f8f9fa;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-left: 10px;
+    font-size: 0.9rem;
+}
+.absence-item {
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+.absence-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+.absence-info {
+    flex-grow: 1;
+}
+.absence-type {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+.absence-dates {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+.absence-days {
+    font-weight: 500;
+    white-space: nowrap;
+}
+.table th {
+    font-weight: normal;
+    color: #6c757d;
+}
+.table td {
+    vertical-align: middle;
+}
+.text-money {
+    text-align: right;
+    font-family: 'Consolas', monospace;
+}
+.summary-box {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    margin-top: 20px;
+}
+.payment-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+.total-amount {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: right;
+}
+.close-btn {
+    padding: 6px 16px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+.total-row {
+    font-weight: bold;
+    border-top: 2px solid #dee2e6;
 }
 
 @media (max-width: 992px) {

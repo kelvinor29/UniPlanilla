@@ -1,7 +1,7 @@
 package com.kelvin.uni_planilla.models.enums;
 
 public enum TipoGradoAcademicoEnum {
-    NO_APLICA("No Aplica"),
+    NO_APLICA("No aplica"),
     TECNICO("Técnico"),
     DIPLOMADO("Diplomado"),
     BACHILLERATO("Bachillerato"),

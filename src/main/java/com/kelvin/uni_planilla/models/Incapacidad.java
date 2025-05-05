@@ -2,7 +2,6 @@ package com.kelvin.uni_planilla.models;
 
 import jakarta.persistence.Transient;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -63,5 +62,10 @@ public class Incapacidad implements Serializable {
     @Column(name = "ESTADO_IN", nullable = false, length = 3)
     @Enumerated(EnumType.STRING)
     private EstadoBasicoEnum estadoInc = EstadoBasicoEnum.ACT;
+
+    @Transient
+    public long getDiasIncapacidad() {
+        return java.time.temporal.ChronoUnit.DAYS.between(fechaInicioInc, fechaFinInc) + 1;
+    }
 
 }

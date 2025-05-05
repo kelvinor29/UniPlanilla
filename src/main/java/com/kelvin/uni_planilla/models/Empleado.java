@@ -2,8 +2,8 @@ package com.kelvin.uni_planilla.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -84,22 +84,22 @@ public class Empleado implements Serializable {
     @Column(name = "BORRADO_E", nullable = false)
     private boolean borradoE = false;
 
-    @OneToMany(mappedBy = "empleado") // TODO: @JsonIgnore??
-    private Set<Nombramiento> nombramientos = new HashSet<>();
+    @OneToMany(mappedBy = "empleado") 
+    private List<Nombramiento> nombramientos = new ArrayList<>();
 
     @OneToMany(mappedBy = "empleado")
-    private Set<EmpleadoTitulo> empleadoTitulos = new HashSet<>();
+    private List<EmpleadoTitulo> empleadoTitulos = new ArrayList<>();
 
     @OneToMany(mappedBy = "empleado")
-    private Set<Permiso> permisos = new HashSet<>();
+    private List<Permiso> permisos = new ArrayList<>();
 
     @OneToMany(mappedBy = "empleado")
-    private Set<Incapacidad> incapacidades = new HashSet<>();
+    private List<Incapacidad> incapacidades = new ArrayList<>();
 
     @OneToMany(mappedBy = "empleado")
-    private Set<Pension> pensiones = new HashSet<>();
+    private List<Pension> pensiones = new ArrayList<>();
 
     @OneToMany(mappedBy = "empleado")
-    private Set<DetallePlanilla> detallesPlanillas = new HashSet<>();
+    private List<DetallePlanilla> detallesPlanillas = new ArrayList<>();
 
 }

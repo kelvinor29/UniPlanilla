@@ -2,9 +2,7 @@ package com.kelvin.uni_planilla.services.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +16,6 @@ import com.kelvin.uni_planilla.services.IBeneficioService;
 
 @Service
 public class BeneficioServiceImpl implements IBeneficioService {
-    private static final Logger logger = LoggerFactory.getLogger(BeneficioServiceImpl.class);
 
     @Autowired
     private BeneficioRepository beneficioRep;
@@ -27,6 +24,12 @@ public class BeneficioServiceImpl implements IBeneficioService {
     @Transactional(readOnly = true)
     public List<Beneficio> listarBeneficiosActivos() {
         return beneficioRep.findByEstadoBen(EstadoBasicoEnum.ACT);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Beneficio> obtenerBeneficioPorId(int idBeneficio){
+        return beneficioRep.findById(idBeneficio);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class BeneficioServiceImpl implements IBeneficioService {
                 totalBeneficios = totalBeneficios.add(monto);
 
                 // Guardar asunto y monto del beneficio en el DTO
-                empleado.getMontosBeneficios().add(new BeneficioEmpleadoDTO(beneficio.getAsuntoBen(), monto));
+                empleado.getMontosBeneficios().add(new BeneficioEmpleadoDTO(beneficio.getIdBeneficio(), beneficio.getAsuntoBen(), monto));
 
             }
             // Actualizar el salario bruto

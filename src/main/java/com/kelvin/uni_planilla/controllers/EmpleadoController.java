@@ -93,8 +93,6 @@ public class EmpleadoController {
                 }).orElse("redirect:/empleados/?error=EmpleadoNoEncontrado"); //TODO: Generar el html de error
     }
 
-    // ==============================================================================================================
-
     private String cargarListaEmpleados(Model model, String mensaje) {
         model.addAttribute("empleados", empleadoService.listarEmpleados());
         model.addAttribute("mensaje", mensaje);

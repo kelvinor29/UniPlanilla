@@ -1,14 +1,10 @@
 package com.kelvin.uni_planilla.controllers;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,12 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kelvin.uni_planilla.dto.TipoPlanillaDTO;
+import com.kelvin.uni_planilla.models.Planilla;
 import com.kelvin.uni_planilla.models.enums.TipoPlanillaEnum;
+import com.kelvin.uni_planilla.services.IDetallesPlanillaService;
 import com.kelvin.uni_planilla.services.IPlanillaService;
-import com.kelvin.uni_planilla.services.impl.PlanillaServiceImpl;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.kelvin.uni_planilla.dto.EmpleadoLaboralDTO;
 import com.kelvin.uni_planilla.dto.PlanillaDTO;
 
 import jakarta.validation.Valid;
@@ -37,10 +35,12 @@ import jakarta.validation.Valid;
 @Controller
 @RequestMapping("/planillas")
 public class PlanillaController {
-    private static final Logger logger = LoggerFactory.getLogger(PlanillaController.class);
 
     @Autowired
     private IPlanillaService planillaService;
+
+    @Autowired
+    private IDetallesPlanillaService detallesService;
 
     @GetMapping("/")
     public String calculo(Model model) {
@@ -58,27 +58,51 @@ public class PlanillaController {
                 .map(tp -> new TipoPlanillaDTO(tp.name(), tp.getTipoPlanilla()))
                 .collect(Collectors.toList());
 
-        for (TipoPlanillaDTO tipoPlanillaDTO : tiposPlanillaDTO) {
-            logger.info("Planilla: {}", tipoPlanillaDTO);
-        }
-
         return ResponseEntity.ok(tiposPlanillaDTO);
     }
 
     @PostMapping("/calcular")
-    public String calcularPlanilla(@Valid @ModelAttribute("planilla") PlanillaDTO planillaDTO, BindingResult resultado,
+    public String calcularPlanilla(@Valid @ModelAttribute("planilla") Planilla planilla, BindingResult resultado,
             Model model) {
 
-        if (resultado.hasErrors()) {
+        if (resultado.hasErrors())
             return cargarPlanillaVacia(model);
+
+        if (planillaService.existePlanillaEnMes(planilla.getMesCalculado(), planilla.getAnioPl(),
+                planilla.getTipoPlanilla().name()))
+            return cargarPlanillaVacia(model);
+
+        // Calculo de la planilla y obtenerla
+        Planilla planillaNueva = planillaService.calcularPlanilla(planilla.getMesCalculado(),
+                planilla.getAnioPl(),
+                planilla.getFechaCalculo(), planilla.getTipoPlanilla());
+
+        List<EmpleadoLaboralDTO> detalles = detallesService.listarInfoBasicaEmpleados(planillaNueva);
+
+        int totalEmpleados = 0;
+        BigDecimal totalSalariosBrutos = BigDecimal.ZERO;
+        BigDecimal totalSalarioNeto = BigDecimal.ZERO;
+
+        // Calcular cantidad de empleados sin duplicacion
+        totalEmpleados = detalles.stream().map(EmpleadoLaboralDTO::getIdEmpleado).collect(Collectors.toSet()).size();
+
+        for (EmpleadoLaboralDTO d : detalles) {
+            totalSalariosBrutos = totalSalariosBrutos.add(d.getSalarioBruto());
+            totalSalarioNeto = totalSalarioNeto.add(d.getSalarioNeto());
         }
 
-        // Calculo de la planilla
-        planillaService.calcularPlanilla(planillaDTO.getMesCalculado(), planillaDTO.getAnioPl(),
-                planillaDTO.getFechaCalculo(),
-                planillaDTO.getTipoPlanilla());
+        model.addAttribute("planilla", planilla);
+        model.addAttribute("empleados", detalles);
+        model.addAttribute("totalEmpleados", totalEmpleados);
+        model.addAttribute("totalSalariosBrutos", totalSalariosBrutos);
+        model.addAttribute("totalSalarioNeto", totalSalarioNeto);
 
-        return "redirect:/planillas/";
+        model.addAttribute("mesesCalculo", planilla.getMesCalculado());
+        model.addAttribute("nombreMeses", PlanillaUtil.obtenerTodosMeses());
+        model.addAttribute("anios", planilla.getAnioPl());
+        model.addAttribute("fechaActual", planilla.getFechaCalculo());
+
+        return "planillas/index";
 
     }
 

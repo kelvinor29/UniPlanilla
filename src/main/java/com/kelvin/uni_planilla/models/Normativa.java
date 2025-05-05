@@ -1,8 +1,8 @@
 package com.kelvin.uni_planilla.models;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 
@@ -13,9 +13,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMax;
@@ -55,6 +52,6 @@ public class Normativa implements Serializable {
     private EstadoBasicoEnum estadoNorm = EstadoBasicoEnum.ACT;
 
     @OneToMany(mappedBy = "normativa")
-    private Set<Incapacidad> incapacidades = new HashSet<>();
+    private List<Incapacidad> incapacidades = new ArrayList<>();
 
 }

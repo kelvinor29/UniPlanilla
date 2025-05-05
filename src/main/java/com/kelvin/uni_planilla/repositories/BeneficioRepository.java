@@ -12,4 +12,5 @@ import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 public interface BeneficioRepository extends JpaRepository<Beneficio, Integer> {
 
     public List<Beneficio> findByEstadoBen(EstadoBasicoEnum estado);
+
 }

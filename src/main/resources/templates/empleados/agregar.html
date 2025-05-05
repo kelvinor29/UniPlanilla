@@ -70,7 +70,7 @@
                             <label for="fechaNacimiento" class="form-label">Fecha de nacimiento:</label>
                             <input type="date" class="form-control" id="fechaNacimiento" 
                                 th:field="*{fechaNacimiento}" required
-                                th:max="${#dates.format(#dates.createNow().minusDays(1), 'yyyy-MM-dd')}">
+                                th:max="${#temporals.format(#temporals.createNow().minusDays(1), 'yyyy-MM-dd')}">
                             <span th:if="${#fields.hasErrors('fechaNacimiento')}" th:errors="*{fechaNacimiento}"
                                 class="text-danger form-text"></span>
                         </div>

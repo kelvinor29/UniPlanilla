@@ -33,7 +33,7 @@ public interface PlanillaRepository extends JpaRepository<Planilla, Integer> {
                         GROUP BY ID_EMPLEADO
                         )
 
-                        SELECT	E.ID_EMPLEADO AS idEmpleado, N.TIPO_SALARIO AS tipoSalario, P.CATEGORIA AS categoria,
+                        SELECT	E.ID_EMPLEADO AS idEmpleado, N.TIPO_SALARIO AS tipoSalario, P.CATEGORIA AS categoria, P.PUESTO AS puestoE,
                                 CASE    WHEN N.TIPO_SALARIO = 'Global' THEN P.SALARIO_GLOBAL
                                         WHEN N.TIPO_SALARIO = 'Compuesto' THEN P.SALARIO_BASE
                                 END AS salarioBase,
@@ -48,4 +48,11 @@ public interface PlanillaRepository extends JpaRepository<Planilla, Integer> {
         public List<EmpleadoLaboralDTO> obtenerDatosEmpleadosPlanilla(
                         @Param("idsEmpleados") List<Integer> idsEmpleados, @Param("inicioMes") LocalDate inicioMes,
                         @Param("finMes") LocalDate finMes);
+
+        @Query(value = """
+                        SELECT	P.ID_PLANILLA, ANIO_PL, MES_CALCULADO, FECHA_CALCULO, TIPO_PLANILLA, FECHA_PRIMER_PAGO, FECHA_SEGUNDO_PAGO, PORCENTAJE_PRIMER_PAGO, PORCENTAJE_SEGUNDO_PAGO
+                        FROM	PLANILLAS P JOIN DETALLES_PLANILLAS DP ON P.ID_PLANILLA = DP.ID_PLANILLA
+                        WHERE	DP.ID_DETALLE_PLANILLA = :idDetallePlanilla
+                        """, nativeQuery = true)
+        public Planilla obtenerPlanillaPorId(@Param("idDetallePlanilla") int idDetallePlanilla);
 }

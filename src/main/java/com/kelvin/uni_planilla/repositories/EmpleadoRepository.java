@@ -53,7 +53,7 @@ public interface EmpleadoRepository extends JpaRepository<Empleado, Integer> {
                                 THEN 1 ELSE 0 END
                                 AS BIT)
                         """, nativeQuery = true)
-        public Integer tieneEmpleadoRelaciones(@Param("idEmpleado") int idEmpleado);
+        public Boolean tieneEmpleadoRelaciones(@Param("idEmpleado") int idEmpleado);
 
         // ==============================================================================
         @Query(value = """

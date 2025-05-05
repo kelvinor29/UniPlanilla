@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -61,4 +62,8 @@ public class Permiso implements Serializable {
     @Enumerated(EnumType.STRING)
     private EstadoBasicoEnum estadoPer = EstadoBasicoEnum.ACT;
 
+    @Transient
+    public long getDiasPermiso() {
+        return java.time.temporal.ChronoUnit.DAYS.between(fechaInicioPer, fechaFinalPer) + 1;
+    }
 }

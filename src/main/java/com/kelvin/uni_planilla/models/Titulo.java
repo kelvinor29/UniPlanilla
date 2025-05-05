@@ -1,8 +1,8 @@
 package com.kelvin.uni_planilla.models;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,5 +40,5 @@ public class Titulo implements Serializable {
     private boolean borradoT;
 
     @OneToMany(mappedBy = "titulo")
-    private Set<EmpleadoTitulo> empleadosTitulos = new HashSet<>();
+    private List<EmpleadoTitulo> empleadosTitulos = new ArrayList<>();
 }

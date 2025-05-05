@@ -7,21 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kelvin.uni_planilla.dto.EmpleadoLaboralDTO;
 import com.kelvin.uni_planilla.dto.IncapacidadEmpleadoDTO;
-import com.kelvin.uni_planilla.models.Incapacidad;
 import com.kelvin.uni_planilla.repositories.IncapacidadRepository;
 import com.kelvin.uni_planilla.services.IEmpleadoService;
 import com.kelvin.uni_planilla.services.IIncapacidadService;
 
 @Service
 public class IncapacidadServiceImpl implements IIncapacidadService {
-	private static final Logger logger = LoggerFactory.getLogger(IncapacidadServiceImpl.class);
 
 	@Autowired
 	private IncapacidadRepository incapacidadRep;
@@ -68,13 +64,13 @@ public class IncapacidadServiceImpl implements IIncapacidadService {
 					totalSubsidio = totalSubsidio.add(subsidio);
 
 				}
-
 				empleado.setDiasIncapacidad(totalDiasIncapacidad);
 				empleado.setSubsidioTotal(totalSubsidio);
-				empleado.setIncapacidades(incapacidades);
+				empleado.setIncapacidadesDTO(incapacidadesEmpleado);
 
 				empleado.setSalarioNeto(empleado.getSalarioNeto().subtract(totalMontoADescontar).max(BigDecimal.ZERO));
 				empleado.setSalarioNeto(empleado.getSalarioNeto().add(totalSubsidio));
+
 			}
 
 		});

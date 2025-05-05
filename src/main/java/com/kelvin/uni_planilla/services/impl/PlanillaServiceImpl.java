@@ -1,16 +1,12 @@
 package com.kelvin.uni_planilla.services.impl;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +14,13 @@ import com.kelvin.uni_planilla.dto.BeneficioEmpleadoDTO;
 import com.kelvin.uni_planilla.dto.DeduccionEmpleadoDTO;
 import com.kelvin.uni_planilla.dto.EmpleadoLaboralDTO;
 import com.kelvin.uni_planilla.models.Beneficio;
+import com.kelvin.uni_planilla.models.Deduccion;
+import com.kelvin.uni_planilla.models.DetalleBeneficio;
+import com.kelvin.uni_planilla.models.DetalleDeduccion;
 import com.kelvin.uni_planilla.models.DetallePlanilla;
 import com.kelvin.uni_planilla.models.Empleado;
-import com.kelvin.uni_planilla.models.Incapacidad;
 import com.kelvin.uni_planilla.models.Planilla;
 import com.kelvin.uni_planilla.models.enums.TipoPlanillaEnum;
-import com.kelvin.uni_planilla.models.enums.TipoSalarioEnum;
 import com.kelvin.uni_planilla.repositories.PlanillaRepository;
 import com.kelvin.uni_planilla.services.IBeneficioService;
 import com.kelvin.uni_planilla.services.IDeduccionService;
@@ -32,10 +29,11 @@ import com.kelvin.uni_planilla.services.IIncapacidadService;
 import com.kelvin.uni_planilla.services.IPermisoService;
 import com.kelvin.uni_planilla.services.IPlanillaService;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+
 @Service
 public class PlanillaServiceImpl implements IPlanillaService {
-
-    private static final Logger logger = LoggerFactory.getLogger(PlanillaServiceImpl.class);
 
     @Autowired
     private PlanillaRepository planillaRep;
@@ -78,17 +76,19 @@ public class PlanillaServiceImpl implements IPlanillaService {
 
     // Cálculo general de planilla
     @Override
-    public void calcularPlanilla(byte mes, short anio, LocalDate fechaActual, TipoPlanillaEnum tipoPlanilla) {
+    @Transactional
+    public Planilla calcularPlanilla(byte mes, short anio, LocalDate fechaActual, TipoPlanillaEnum tipoPlanilla) {
 
         Planilla planilla = new Planilla();
         planilla.setAnioPl(anio);
         planilla.setMesCalculado(mes);
         planilla.setFechaCalculo(fechaActual);
         planilla.setTipoPlanilla(tipoPlanilla);
+
         planilla.setFechaPrimerPago(fechaActual.plusDays(14));
         planilla.setFechaSegundoPago(fechaActual.plusDays(27));
-        planilla.setPorcentajePrimerPago(0.60);
-        planilla.setPorcentajeSegundoPago(0.40);
+        planilla.setPorcentajePrimerPago(0.40);
+        planilla.setPorcentajeSegundoPago(0.60);
 
         List<DetallePlanilla> detallePlanillas = new ArrayList<>();
 
@@ -96,8 +96,8 @@ public class PlanillaServiceImpl implements IPlanillaService {
         if (tipoPlanilla == TipoPlanillaEnum.ORDINARIO)
             detallePlanillas = calcularDetallesOrdinaria(mes, anio, planilla);
 
-        planilla.setDetallesPlanilla(new HashSet<>(detallePlanillas));
-        planillaRep.save(planilla);
+        planilla.setDetallesPlanilla(new ArrayList<>(detallePlanillas));
+        return planillaRep.save(planilla);
     }
 
     // Cálculo para los detalles de planilla ORDINARIA
@@ -118,34 +118,79 @@ public class PlanillaServiceImpl implements IPlanillaService {
         // Listado de empleados válidos con su respectivo nombramiento y puesto
         List<EmpleadoLaboralDTO> infoEmpleadosMes = obtenerDatosEmpleadoParaPlanilla(inicioMes, finMes, idsEmpleados);
 
-        List<DetallePlanilla> detalles = new ArrayList<>();
+        return infoEmpleadosMes.stream().map(e -> crearDetallePlanilla(e, planilla)).collect(Collectors.toList());
+    }
 
-        for (EmpleadoLaboralDTO empleado : infoEmpleadosMes) {
-            DetallePlanilla detalleP = new DetallePlanilla();
+    private DetallePlanilla crearDetallePlanilla(EmpleadoLaboralDTO empleadoDTO, Planilla planilla) {
+        Empleado empleado = empleadoService.obtenerEmpleado(empleadoDTO.getIdEmpleado())
+                .orElseThrow(() -> new EntityNotFoundException("Empleano no disponible."));
 
-            Empleado emp = empleadoService.obtenerEmpleado(empleado.getIdEmpleado())
-                    .orElseThrow(() -> new RuntimeException("Empleado no encontrado: " + empleado.getIdEmpleado()));
+        byte diasTrabajados = (byte) Math.max(0, 20 - (empleadoDTO.getDiasIncapacidad()
+                + empleadoDTO.getDiasPermisoConGoce() + empleadoDTO.getDiasPermisoSinGoce()));
+        byte diasPagados = (byte) Math.max(0, 20 - (empleadoDTO.getDiasPermisoSinGoce()));
 
-            detalleP.setEmpleado(emp);
-            detalleP.setPlanilla(planilla);
-            detalleP.setDiasTrabajados((byte) 20); // TODO: Calcular dependiendo de permisos e incapacidades
-            detalleP.setDiasPagados((byte) 20); // TODO: Calcular dependiendo de permisos e incapacidades
+        DetallePlanilla detalle = new DetallePlanilla();
+        detalle.setEmpleado(empleado);
+        detalle.setPlanilla(planilla);
+        detalle.setDiasTrabajados(diasTrabajados);
+        detalle.setDiasPagados(diasPagados);
 
-            detalleP.setSalarioBase(empleado.getSalarioBase());
-            detalleP.setSalarioBruto(empleado.getSalarioBruto());
-            detalleP.setSalarioNeto(empleado.getSalarioNeto());
+        // Info Salarios
+        detalle.setSalarioBase(empleadoDTO.getSalarioBase());
+        detalle.setSalarioBruto(empleadoDTO.getSalarioBruto());
+        detalle.setSalarioNeto(empleadoDTO.getSalarioNeto());
 
-            List<Integer> listaIdsBeneficios = empleado.getMontosBeneficios().stream()
-                    .map(BeneficioEmpleadoDTO::getIdBeneficio).collect(Collectors.toList());
-            List<Integer> listaIdsDeducciones = empleado.getMontosDeducciones().stream()
-                    .map(DeduccionEmpleadoDTO::getIdDeduccion).collect(Collectors.toList());
-            detalleP.setDetallesBeneficios(beneficioService.listarBeneficiosPorIds(listaIdsBeneficios));
+        // Listas
+        detalle.setDetallesBeneficios(guardarBeneficiosEmpleado(empleadoDTO, detalle));
+        detalle.setDetallesDeducciones(guardarDeduccionesEmpleado(empleadoDTO, detalle));
 
-            detalles.add(detalleP);
+        detalle.setImpuestosRenta(new ArrayList<>(empleadoDTO.getImpuestoRentas()));
 
+        return detalle;
+    }
+
+    private List<DetalleBeneficio> guardarBeneficiosEmpleado(EmpleadoLaboralDTO empleado, DetallePlanilla detalle) {
+        List<DetalleBeneficio> listaDeducciones = new ArrayList<>();
+
+        // Por cada beneficio se guarda en la tabla intermedia
+        for (BeneficioEmpleadoDTO deduccionDTO : empleado.getMontosBeneficios()) {
+            Beneficio beneficio = beneficioService.obtenerBeneficioPorId(deduccionDTO.getIdBeneficio())
+                    .orElseThrow(() -> new EntityNotFoundException("Beneficio no disponible."));
+
+            DetalleBeneficio detalleDec = new DetalleBeneficio();
+            detalleDec.setBeneficio(beneficio);
+            detalleDec.setDetallePlanilla(detalle);
+            detalleDec.setMontoBeneficio(deduccionDTO.getMontoBen());
+
+            listaDeducciones.add(detalleDec);
         }
 
-        return detalles;
+        return listaDeducciones;
+    }
+
+    private List<DetalleDeduccion> guardarDeduccionesEmpleado(EmpleadoLaboralDTO empleado, DetallePlanilla detalle) {
+        List<DetalleDeduccion> listaBeneficios = new ArrayList<>();
+
+        // Por cada deducción se guarda en la tabla intermedia
+        for (DeduccionEmpleadoDTO deduccionDTO : empleado.getMontosDeducciones()) {
+            Deduccion deduccion = deduccionService.obtenerDeduccionPorId(deduccionDTO.getIdDeduccion())
+                    .orElseThrow(() -> new EntityNotFoundException("Deducción no disponible."));
+
+            DetalleDeduccion detalleDec = new DetalleDeduccion();
+            detalleDec.setDeduccion(deduccion);
+            detalleDec.setDetallePlanilla(detalle);
+            detalleDec.setMontoDeduccion(deduccionDTO.getMontoDec());
+
+            listaBeneficios.add(detalleDec);
+        }
+
+        return listaBeneficios;
+    }
+
+
+    @Override
+    public boolean existePlanillaEnMes(byte mesCalculado, short anioPl, String tipoPlanilla){
+        return planillaRep.existePlanillaEnMes(mesCalculado, anioPl, tipoPlanilla);
     }
 
     // Obtener datos importantes por mes del empleado para la planilla
@@ -173,37 +218,16 @@ public class PlanillaServiceImpl implements IPlanillaService {
         incapacidadService.calcularIncapacidadYSubsidioEmpleadosPorMes(infoEmpleadoPorMes, inicioMes.minusMonths(1),
                 finMes.minusMonths(1));
 
-        // for (EmpleadoLaboralDTO empleado : infoEmpleadoPorMes) {
-        // empleado.setSalarioNeto(empleado.getSalarioBruto().add(empleado.getSubsidioTotal()));
-        // logger.info("====================Final====================\n");
-        // logger.info("Empleado: {}", empleado.getIdEmpleado());
-        // logger.info("Salario: {}", empleado.getTipoSalario());
-        // logger.info("Categoria: {}", empleado.getCategoria());
-        // logger.info("Anios Servicio: {}", empleado.getAniosServicio());
-        // logger.info("Puntos: {}", empleado.getPuntosProfesionales());
-        // logger.info("------------------------------------------");
-        // logger.info("SalarioBase: {}", empleado.getSalarioBase());
-        // logger.info("SalarioBruto: {}", empleado.getSalarioBruto());
-        // logger.info("Subsidio Total: {}", empleado.getSubsidioTotal());
-        // logger.info("Salario Neto: {}", empleado.getSalarioNeto());
-        // logger.info("----------------Beneficios----------------\n");
-        // empleado.getMontosBeneficios()
-        // .forEach(beneficio -> logger.info("{}: {}", beneficio.getAsuntoBen(),
-        // beneficio.getMontoBen()));
-        // logger.info("----------------Deducciones----------------\n");
-        // empleado.getMontosDeducciones()
-        // .forEach(dec -> logger.info("{}: {}", dec.getAsuntoDec(),
-        // dec.getMontoDec()));
-        // logger.info("------------------------------------------");
-        // logger.info("Dias Incapacidad: {}", empleado.getDiasIncapacidad());
-        // logger.info("Dias Permiso Goce: {}", empleado.getDiasPermisoConGoce());
-        // logger.info("Dias Permiso Sin Goce: {}", empleado.getDiasPermisoSinGoce());
-        // logger.info("------------------------------------------");
-
-        // logger.info("=========================================\n");
-        // }
-
         return infoEmpleadoPorMes;
     }
 
+    @Override
+    public List<Planilla> listarPlanillasExistentes() {
+        return planillaRep.findAll();
+    }
+
+    @Override
+    public Planilla obtenerPlanillaPorIdDetalle(int idDetallePlanilla) {
+        return planillaRep.obtenerPlanillaPorId(idDetallePlanilla);
+    }
 }

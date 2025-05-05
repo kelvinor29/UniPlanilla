@@ -10,7 +10,8 @@ public class BeneficioEmpleadoDTO {
     private String asuntoBen;
     private BigDecimal montoBen;
 
-    public BeneficioEmpleadoDTO(String asuntoBen, BigDecimal montoBen) {
+    public BeneficioEmpleadoDTO(int idBeneficio, String asuntoBen, BigDecimal montoBen) {
+        this.idBeneficio = idBeneficio;
         this.asuntoBen = asuntoBen;
         this.montoBen = montoBen;
     }

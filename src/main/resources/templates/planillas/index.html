@@ -2,9 +2,6 @@
 <html lang="en" xmlns="http://www.thymeleaf.org">
 
 <head th:replace="layout/plantillas :: head">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
 </head>
 
 <body>
@@ -12,6 +9,7 @@
 
     <main class="w-100 d-flex justify-content-start align-items-center flex-column">
 
+        <!-- Form y resultados del cálculo -->
         <div class="row g-4">
 
             <div class="col-12 col-xxl-5">
@@ -76,8 +74,20 @@
                             <div class="col-12 col-md-4">
                                 <div class="card">
                                     <div class="card-body">
-                                        <p class="card-title mb-0">Total Salario Bruto</p>
-                                        <p class="card-text fw-semibold lead">$00,000.00</p>
+                                        <p class="card-title mb-0">Cantidad Empleados:</p>
+                                        <p class="card-text fw-semibold lead" th:text="${totalEmpleados ?: '- -'}"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" col-12 col-md-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <p class="card-title mb-0">Total Salarios Brutos:</p>
+                                        <p class="card-text fw-semibold lead"
+                                            th:text="${totalSalariosBrutos != null and totalSalariosBrutos > 0 ? 
+                                                '₡' + #numbers.formatDecimal(totalSalariosBrutos, 0, 'POINT', 2, 'COMMA') : '₡ --.---,--'}">
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -85,17 +95,11 @@
                             <div class="col-12 col-md-4">
                                 <div class="card">
                                     <div class="card-body">
-                                        <p class="card-title mb-0">Total Deducciones</p>
-                                        <p class="card-text fw-semibold lead">$00,000.00</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-12 col-md-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <p class="card-title mb-0">Total Salario Neto</p>
-                                        <p class="card-text fw-semibold lead">$00,000.00</p>
+                                        <p class="card-title mb-0">Total Salarios Netos:</p>
+                                        <p class="card-text fw-semibold lead"
+                                            th:text="${totalSalarioNeto != null and totalSalarioNeto > 0 ?
+                                                '₡' + #numbers.formatDecimal(totalSalarioNeto, 0, 'POINT', 2, 'COMMA') : '₡ --.---,--'}">
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -114,7 +118,7 @@
         <article class="container">
             <div class="row">
 
-                <div class="col-12 col-lg-4">
+                <div class="col-12 col-lg-4 ">
 
                     <form th:action="@{/empleados/buscar}" method="post">
                         <div class="input-group mt-2">
@@ -127,8 +131,9 @@
 
             </div>
 
+            <!-- Contenedor de tarjetas para cada empleado -->
             <div class="row">
-                <div class="col-12 col-md-4 col-xl-3" th:each="empleado : ${empleados}">
+                <div class="col-12 col-md-6 col-xxl-4" th:each="empleado : ${empleados}">
                     <div th:replace="layout/card-empleado :: empleadoCarta(${empleado})"></div>
                 </div>
             </div>

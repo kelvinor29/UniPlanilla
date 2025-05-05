@@ -3,9 +3,8 @@ package com.kelvin.uni_planilla.services.impl;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +13,7 @@ import com.kelvin.uni_planilla.dto.DeduccionEmpleadoDTO;
 import com.kelvin.uni_planilla.dto.EmpleadoLaboralDTO;
 import com.kelvin.uni_planilla.models.Deduccion;
 import com.kelvin.uni_planilla.models.ImpuestoRenta;
+import com.kelvin.uni_planilla.models.Pension;
 import com.kelvin.uni_planilla.models.enums.EstadoBasicoEnum;
 import com.kelvin.uni_planilla.repositories.DeduccionRepository;
 import com.kelvin.uni_planilla.services.IDeduccionService;
@@ -22,8 +22,6 @@ import com.kelvin.uni_planilla.services.IPensionService;
 
 @Service
 public class DeduccionServiceImpl implements IDeduccionService {
-
-    private static final Logger logger = LoggerFactory.getLogger(DeduccionServiceImpl.class);
 
     @Autowired
     private DeduccionRepository deduccionRep;
@@ -41,6 +39,12 @@ public class DeduccionServiceImpl implements IDeduccionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Deduccion> obtenerDeduccionPorId(int idDeduccion) {
+        return deduccionRep.findById(idDeduccion);
+    }
+
+    @Override
     public void calcularDeduccionesEmpleadosPorMes(List<EmpleadoLaboralDTO> infoEmpleadoPorMes) {
 
         List<Deduccion> deduccionesActivas = listarDeduccionesActivos();
@@ -52,17 +56,16 @@ public class DeduccionServiceImpl implements IDeduccionService {
             BigDecimal totalDeducciones = BigDecimal.ZERO;
             BigDecimal salarioBruto = empleado.getSalarioBruto();
 
-            List<DeduccionEmpleadoDTO> listaPensiones = pensionService
-                    .listarPensionesActivasEmpleado(empleado.getIdEmpleado());
+            List<Pension> listaPensiones = pensionService.listarPensionesActivasEmpleado(empleado.getIdEmpleado());
 
             // Calcular los montos de las pensiones y restar al salario bruto
-            for (DeduccionEmpleadoDTO pension : listaPensiones) {
-                BigDecimal monto = pension.getMontoDec();
+            for (Pension pension : listaPensiones) {
+                BigDecimal monto = pension.getMontoPen();
 
                 // Validar si el empleado tiene suficientes fondos
                 if (totalDeducciones.add(monto).compareTo(salarioBruto) <= 0) {
                     totalDeducciones = totalDeducciones.add(monto);
-                    empleado.getMontosDeducciones().add(pension);
+                    empleado.getPensiones().add(pension);
                 }
             }
 
@@ -75,18 +78,20 @@ public class DeduccionServiceImpl implements IDeduccionService {
 
                     // Guardar asunto y monto del deduccion en el DTO
                     totalDeducciones = totalDeducciones.add(monto);
-                    empleado.getMontosDeducciones().add(new DeduccionEmpleadoDTO(deduccion.getAsuntoDec(), monto));
+                    empleado.getMontosDeducciones().add(new DeduccionEmpleadoDTO(deduccion.getIdDeduccion(), deduccion.getAsuntoDec(), monto));
 
                 }
 
             }
 
             // Calcular monto de los impuestos de renta
-            BigDecimal monto = calcularMontoRentas(listaRentasActivas, empleado.getSalarioBruto(), 0);
-            
-            totalDeducciones = totalDeducciones.add(monto);
+            BigDecimal montoImpuestosRenta = calcularMontoRentas(listaRentasActivas, empleado.getSalarioBruto(), 0);
+
+            totalDeducciones = totalDeducciones.add(montoImpuestosRenta);
             empleado.setSalarioNeto(empleado.getSalarioBruto().subtract(totalDeducciones).max(BigDecimal.ZERO));
-            
+
+            empleado.setTotalImpuestosRentas(montoImpuestosRenta);
+            empleado.setImpuestoRentas(listaRentasActivas);
         }
 
     }
@@ -158,7 +163,8 @@ public class DeduccionServiceImpl implements IDeduccionService {
         if (impuesto.getMontoMaximo().compareTo(BigDecimal.ZERO) == 0)
             montoExceso = salarioBruto.subtract(impuesto.getMontoMinimo().max(BigDecimal.ZERO));
         else
-            montoExceso = salarioBruto.min(impuesto.getMontoMaximo()).subtract(impuesto.getMontoMinimo().max(BigDecimal.ZERO));
+            montoExceso = salarioBruto.min(impuesto.getMontoMaximo())
+                    .subtract(impuesto.getMontoMinimo().max(BigDecimal.ZERO));
 
         if (montoExceso.compareTo(BigDecimal.ZERO) <= 0)
             montoExceso = BigDecimal.ZERO;

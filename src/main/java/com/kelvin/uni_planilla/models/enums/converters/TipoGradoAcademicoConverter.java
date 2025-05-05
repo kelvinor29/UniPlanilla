@@ -25,7 +25,7 @@ public class TipoGradoAcademicoConverter implements AttributeConverter<TipoGrado
             if (tipoGrado.toString().equals(dbData))
                 return tipoGrado;
         }
-        throw new IllegalArgumentException("Valor desconocido en base de datos: " + dbData);
+        throw new IllegalArgumentException(dbData);
     }
 
 }

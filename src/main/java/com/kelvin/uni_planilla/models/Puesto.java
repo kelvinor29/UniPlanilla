@@ -3,8 +3,8 @@ package com.kelvin.uni_planilla.models;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -64,6 +64,6 @@ public class Puesto implements Serializable {
     private boolean borradoP = false;
 
     @OneToMany(mappedBy = "puesto")
-    private Set<Nombramiento> nombramientos = new HashSet<>();
+    private List<Nombramiento> nombramientos = new ArrayList<>();
 
 }

@@ -16,7 +16,7 @@ public interface DeduccionRepository extends JpaRepository<Deduccion, Integer> {
     public List<Deduccion> findByEstadoDec(EstadoBasicoEnum estado);
 
     @Query(value = """
-            SELECT	D.ASUNTO_D AS asuntoDec, D.VALOR_D AS montoDec
+            SELECT	D.ID_DEDUCCION AS idDeduccion, D.ASUNTO_D AS asuntoDec, D.VALOR_D AS montoDec
             FROM	DEDUCCIONES D
             WHERE	D.ESTADO_D = 'ACT'
             """, nativeQuery = true)

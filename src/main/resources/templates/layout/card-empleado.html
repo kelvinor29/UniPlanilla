@@ -9,12 +9,29 @@
 
 <body>
     <div th:fragment="empleadoCarta(empleado)">
-        <div class="card shadow rounded-3 p-3 mb-3">
-            <h5 class="card-title" th:text="${empleado.nombre} + ' ' + ${empleado.apellido}"></h5>
-            <p class="card-text"><strong>Cédula:</strong> <span th:text="${empleado.cedula}"></span></p>
-            <p class="card-text"><strong>Fecha Nacimiento:</strong> <span
-                    th:text="${#dates.format(empleado.fechaNacimiento, 'dd/MM/yyyy')}"></span></p>
-            <p class="card-text"><strong>Correo:</strong> <span th:text="${empleado.correo}"></span></p>
+        <div class="card--empleado card" th:if="${empleado != null}">
+            <div class="d-flex align-items-center pt-3 pb-3 pe-4 ps-4">
+                <div class="card__avatar" th:text="${#strings.substring(empleado.nombreCompleto, 0, 2)}"></div>
+                <div>
+                    <h6 class="fw-bold mb-0" th:text="${empleado.nombreCompleto}"></h6>
+                    <p class="card__email" th:text="${empleado.correoElectronico}"></p>
+                </div>
+            </div>
+            <div class="pt-0 pb-3 pe-4 ps-4">
+                <div class="card__info">
+                    <span class="info-label">Puesto:</span>
+                    <span th:text="${empleado.puestoE}"></span>
+                </div>
+                <div class="card__info">
+                    <span class="info-label" th:text="${'Salario ' + empleado.tipoSalario + ':'}"></span>
+                    <span th:text="${'₡' + #numbers.formatDecimal(empleado.salarioBase, 0, 'POINT', 2, 'COMMA')}">€0.000,00</span>
+                </div>
+                <div class="card__info">
+                    <span class="info-label">Salario Neto:</span>
+                    <span th:text="${empleado.salarioNeto != null ? ('€' + #numbers.formatDecimal(empleado.salarioNeto, 0, 'POINT', 2, 'COMMA')) : '---'}">---</span>
+                </div>
+                <a th:href="@{/resumen/{idDetallePlanilla}(idDetallePlanilla=${empleado.idDetallePlanilla})}" class="btn btn--detalles text-decoration-none">Ver detalles</a>
+            </div>
         </div>
     </div>
 
